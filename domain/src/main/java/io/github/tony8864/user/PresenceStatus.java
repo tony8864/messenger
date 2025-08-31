@@ -1,5 +1,5 @@
 package io.github.tony8864.user;
 
-public enum PresenceState {
+public enum PresenceStatus {
     ONLINE, OFFLINE, AWAY, BUSY
 }

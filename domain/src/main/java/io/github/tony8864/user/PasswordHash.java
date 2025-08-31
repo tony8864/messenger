@@ -16,8 +16,8 @@ public class PasswordHash {
         return new PasswordHash(hash);
     }
 
-    public String value() {
-        return hash;
+    public boolean matches(String rawPassword, PasswordHasher hasher) {
+        return hasher.verify(rawPassword, this.hash);
     }
 
     @Override

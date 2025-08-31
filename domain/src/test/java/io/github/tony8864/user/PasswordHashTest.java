@@ -10,7 +10,6 @@ class PasswordHashTest {
     void newHashShouldCreateInstanceWithValidValue() {
         PasswordHash hash = PasswordHash.newHash("hashedPassword123");
         assertNotNull(hash);
-        assertEquals("hashedPassword123", hash.value());
     }
 
     @Test
@@ -21,6 +20,24 @@ class PasswordHashTest {
     @Test
     void newHashShouldThrowExceptionWhenValueIsBlank() {
         assertThrows(EmptyPasswordHashException.class, () -> PasswordHash.newHash("   "));
+    }
+
+    @Test
+    void matchesShouldReturnTrueWhenHasherVerifiesCorrectly() {
+        PasswordHash stored = PasswordHash.newHash("storedHash");
+
+        PasswordHasher fakeHasher = (raw, hash) -> raw.equals("secret") && hash.equals("storedHash");
+
+        assertTrue(stored.matches("secret", fakeHasher));
+    }
+
+    @Test
+    void matchesShouldReturnFalseWhenHasherRejects() {
+        PasswordHash stored = PasswordHash.newHash("storedHash");
+
+        PasswordHasher fakeHasher = (raw, hash) -> false;
+
+        assertFalse(stored.matches("wrong", fakeHasher));
     }
 
     @Test
@@ -38,5 +55,13 @@ class PasswordHashTest {
         PasswordHash h2 = PasswordHash.newHash("xyz456");
 
         assertNotEquals(h1, h2);
+    }
+
+    @Test
+    void equalsShouldReturnFalseForNullOrDifferentClass() {
+        PasswordHash hash = PasswordHash.newHash("abc123");
+
+        assertNotEquals(null, hash);
+        assertNotEquals(new Object(), hash);
     }
 }
