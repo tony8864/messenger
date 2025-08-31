@@ -15,7 +15,7 @@ public class UserId {
         return new UserId(UUID.randomUUID().toString());
     }
 
-    static UserId of(String value) {
+    public static UserId of(String value) {
         return new UserId(value);
     }
 

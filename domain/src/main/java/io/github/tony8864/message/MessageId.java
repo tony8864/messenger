@@ -14,7 +14,7 @@ public class MessageId {
         return new MessageId(UUID.randomUUID().toString());
     }
 
-    static MessageId of(String value) {
+    public static MessageId of(String value) {
         return new MessageId(value);
     }
 
