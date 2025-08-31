@@ -1,8 +1,11 @@
 package io.github.tony8864.chat;
 
-import io.github.tony8864.common.exceptions.EmptyGroupNameException;
-import io.github.tony8864.common.exceptions.GroupChatDeletedException;
-import io.github.tony8864.user.UserId;
+import io.github.tony8864.exceptions.EmptyGroupNameException;
+import io.github.tony8864.exceptions.GroupChatDeletedException;
+import io.github.tony8864.entities.chat.ChatId;
+import io.github.tony8864.entities.chat.GroupChat;
+import io.github.tony8864.entities.chat.GroupChatStatus;
+import io.github.tony8864.entities.user.UserId;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

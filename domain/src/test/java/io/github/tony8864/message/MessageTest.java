@@ -1,8 +1,11 @@
 package io.github.tony8864.message;
 
-import io.github.tony8864.chat.ChatId;
-import io.github.tony8864.common.exceptions.EmptyMessageContentException;
-import io.github.tony8864.user.UserId;
+import io.github.tony8864.entities.chat.ChatId;
+import io.github.tony8864.exceptions.EmptyMessageContentException;
+import io.github.tony8864.entities.message.Message;
+import io.github.tony8864.entities.message.MessageId;
+import io.github.tony8864.entities.message.MessageStatus;
+import io.github.tony8864.entities.user.UserId;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

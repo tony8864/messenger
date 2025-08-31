@@ -1,6 +1,8 @@
 package io.github.tony8864.user;
 
-import io.github.tony8864.common.exceptions.EmptyPasswordHashException;
+import io.github.tony8864.exceptions.EmptyPasswordHashException;
+import io.github.tony8864.entities.user.PasswordHash;
+import io.github.tony8864.entities.user.PasswordHasher;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +28,17 @@ class PasswordHashTest {
     void matchesShouldReturnTrueWhenHasherVerifiesCorrectly() {
         PasswordHash stored = PasswordHash.newHash("storedHash");
 
-        PasswordHasher fakeHasher = (raw, hash) -> raw.equals("secret") && hash.equals("storedHash");
+        PasswordHasher fakeHasher = new PasswordHasher() {
+            @Override
+            public String hash(String rawPassword) {
+                return "not-used-in-this-test";
+            }
+
+            @Override
+            public boolean verify(String rawPassword, String hash) {
+                return rawPassword.equals("secret") && hash.equals("storedHash");
+            }
+        };
 
         assertTrue(stored.matches("secret", fakeHasher));
     }
@@ -35,7 +47,17 @@ class PasswordHashTest {
     void matchesShouldReturnFalseWhenHasherRejects() {
         PasswordHash stored = PasswordHash.newHash("storedHash");
 
-        PasswordHasher fakeHasher = (raw, hash) -> false;
+        PasswordHasher fakeHasher = new PasswordHasher() {
+            @Override
+            public String hash(String rawPassword) {
+                return "not-used-in-this-test";
+            }
+
+            @Override
+            public boolean verify(String rawPassword, String hash) {
+                return false; // always reject
+            }
+        };
 
         assertFalse(stored.matches("wrong", fakeHasher));
     }

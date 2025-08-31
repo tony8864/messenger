@@ -1,6 +1,7 @@
 package io.github.tony8864.user;
 
-import io.github.tony8864.common.exceptions.EmptyUsernameException;
+import io.github.tony8864.exceptions.EmptyUsernameException;
+import io.github.tony8864.entities.user.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -42,7 +43,17 @@ class UserTest {
         user.changePassword(newPassword);
 
         // verify with a fake hasher that knows only newPassword
-        PasswordHasher fakeHasher = (raw, hash) -> raw.equals("new") && hash.equals("newHashedPassword456");
+        PasswordHasher fakeHasher = new PasswordHasher() {
+            @Override
+            public String hash(String rawPassword) {
+                return "not-used";
+            }
+
+            @Override
+            public boolean verify(String rawPassword, String hash) {
+                return rawPassword.equals("new") && hash.equals("newHashedPassword456");
+            }
+        };
 
         assertTrue(user.verifyPassword("new", fakeHasher));
         assertFalse(user.verifyPassword("old", fakeHasher));
@@ -52,7 +63,17 @@ class UserTest {
     void verifyPasswordShouldReturnTrueWhenHasherVerifies() {
         User user = User.create(userId, "carol", email, password);
 
-        PasswordHasher fakeHasher = (raw, hash) -> raw.equals("secret") && hash.equals("hashedPassword123");
+        PasswordHasher fakeHasher = new PasswordHasher() {
+            @Override
+            public String hash(String rawPassword) {
+                return "not-used";
+            }
+
+            @Override
+            public boolean verify(String rawPassword, String hash) {
+                return rawPassword.equals("secret") && hash.equals("hashedPassword123");
+            }
+        };
 
         assertTrue(user.verifyPassword("secret", fakeHasher));
     }
@@ -61,7 +82,17 @@ class UserTest {
     void verifyPasswordShouldReturnFalseWhenHasherRejects() {
         User user = User.create(userId, "dave", email, password);
 
-        PasswordHasher fakeHasher = (raw, hash) -> false;
+        PasswordHasher fakeHasher = new PasswordHasher() {
+            @Override
+            public String hash(String rawPassword) {
+                return "not-used";
+            }
+
+            @Override
+            public boolean verify(String rawPassword, String hash) {
+                return false; // always reject
+            }
+        };
 
         assertFalse(user.verifyPassword("wrong", fakeHasher));
     }

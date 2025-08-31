@@ -1,5 +1,6 @@
 package io.github.tony8864.message;
 
+import io.github.tony8864.entities.message.MessageId;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

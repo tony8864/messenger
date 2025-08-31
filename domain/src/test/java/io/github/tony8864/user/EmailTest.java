@@ -1,6 +1,7 @@
 package io.github.tony8864.user;
 
-import io.github.tony8864.common.exceptions.InvalidEmailFormatException;
+import io.github.tony8864.exceptions.InvalidEmailFormatException;
+import io.github.tony8864.entities.user.Email;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

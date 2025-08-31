@@ -1,8 +1,10 @@
 package io.github.tony8864.chat;
 
-import io.github.tony8864.common.exceptions.IllegalParticipantsSizeForDirectChat;
-import io.github.tony8864.message.MessageId;
-import io.github.tony8864.user.UserId;
+import io.github.tony8864.exceptions.IllegalParticipantsSizeForDirectChat;
+import io.github.tony8864.entities.chat.ChatId;
+import io.github.tony8864.entities.chat.DirectChat;
+import io.github.tony8864.entities.message.MessageId;
+import io.github.tony8864.entities.user.UserId;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;

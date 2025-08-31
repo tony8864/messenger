@@ -1,5 +1,6 @@
 package io.github.tony8864.chat;
 
+import io.github.tony8864.entities.chat.ChatId;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
