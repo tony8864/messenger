@@ -16,7 +16,7 @@ public class ChatId {
         return new ChatId(UUID.randomUUID().toString());
     }
 
-    static ChatId of(String value) {
+    public static ChatId of(String value) {
         return new ChatId(value);
     }
 
