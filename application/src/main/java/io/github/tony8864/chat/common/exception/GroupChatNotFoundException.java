@@ -1,4 +1,4 @@
-package io.github.tony8864.chat.exception;
+package io.github.tony8864.chat.common.exception;
 
 public class GroupChatNotFoundException extends RuntimeException {
     public GroupChatNotFoundException(String id) {

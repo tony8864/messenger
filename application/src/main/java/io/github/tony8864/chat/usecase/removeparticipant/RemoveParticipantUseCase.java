@@ -1,10 +1,10 @@
-package io.github.tony8864.chat.usecase;
+package io.github.tony8864.chat.usecase.removeparticipant;
 
-import io.github.tony8864.chat.dto.RemoveParticipantRequest;
-import io.github.tony8864.chat.dto.RemoveParticipantResponse;
-import io.github.tony8864.chat.exception.GroupChatNotFoundException;
+import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantRequest;
+import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantResponse;
+import io.github.tony8864.chat.common.exception.GroupChatNotFoundException;
 import io.github.tony8864.chat.repository.GroupChatRepository;
-import io.github.tony8864.common.exception.UserNotFoundException;
+import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.user.UserId;

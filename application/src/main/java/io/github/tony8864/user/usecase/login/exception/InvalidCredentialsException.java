@@ -1,4 +1,4 @@
-package io.github.tony8864.user.exception;
+package io.github.tony8864.user.usecase.login.exception;
 
 public class InvalidCredentialsException extends RuntimeException {
     public InvalidCredentialsException() {

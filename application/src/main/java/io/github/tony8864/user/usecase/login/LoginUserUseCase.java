@@ -1,17 +1,17 @@
-package io.github.tony8864.user.usecase;
+package io.github.tony8864.user.usecase.login;
 
 import io.github.tony8864.entities.participant.Role;
 import io.github.tony8864.entities.user.Email;
 import io.github.tony8864.entities.user.PasswordHasher;
 import io.github.tony8864.entities.user.PresenceStatus;
 import io.github.tony8864.entities.user.User;
-import io.github.tony8864.user.exception.InvalidCredentialsException;
-import io.github.tony8864.common.exception.UserNotFoundException;
+import io.github.tony8864.user.usecase.login.exception.InvalidCredentialsException;
+import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.user.repository.UserRepository;
 import io.github.tony8864.security.TokenService;
 import io.github.tony8864.security.UserClaims;
-import io.github.tony8864.user.dto.AuthRequest;
-import io.github.tony8864.user.dto.AuthenticatedUser;
+import io.github.tony8864.user.usecase.login.dto.AuthRequest;
+import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
 
 import java.time.Duration;
 import java.util.Set;

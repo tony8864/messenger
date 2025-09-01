@@ -1,9 +1,9 @@
-package io.github.tony8864.chat.usecase;
+package io.github.tony8864.chat.usecase.creategroupchat;
 
-import io.github.tony8864.chat.dto.CreateGroupChatRequest;
-import io.github.tony8864.chat.dto.CreateGroupChatResponse;
+import io.github.tony8864.chat.usecase.creategroupchat.dto.CreateGroupChatRequest;
+import io.github.tony8864.chat.usecase.creategroupchat.dto.CreateGroupChatResponse;
 import io.github.tony8864.chat.repository.GroupChatRepository;
-import io.github.tony8864.common.exception.UserNotFoundException;
+import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.participant.Participant;

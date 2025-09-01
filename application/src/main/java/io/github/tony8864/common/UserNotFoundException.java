@@ -1,4 +1,4 @@
-package io.github.tony8864.common.exception;
+package io.github.tony8864.common;
 
 public class UserNotFoundException extends RuntimeException {
     private UserNotFoundException(String message) {

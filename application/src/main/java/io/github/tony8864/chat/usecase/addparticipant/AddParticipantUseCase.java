@@ -1,17 +1,16 @@
-package io.github.tony8864.chat.usecase;
+package io.github.tony8864.chat.usecase.addparticipant;
 
 import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.participant.Participant;
 import io.github.tony8864.entities.participant.Role;
-import io.github.tony8864.entities.user.User;
 import io.github.tony8864.entities.user.UserId;
-import io.github.tony8864.chat.exception.GroupChatNotFoundException;
-import io.github.tony8864.common.exception.UserNotFoundException;
+import io.github.tony8864.chat.common.exception.GroupChatNotFoundException;
+import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.chat.repository.GroupChatRepository;
 import io.github.tony8864.user.repository.UserRepository;
-import io.github.tony8864.chat.dto.AddParticipantRequest;
-import io.github.tony8864.chat.dto.AddParticipantResponse;
+import io.github.tony8864.chat.usecase.addparticipant.dto.AddParticipantRequest;
+import io.github.tony8864.chat.usecase.addparticipant.dto.AddParticipantResponse;
 
 public class AddParticipantUseCase {
 

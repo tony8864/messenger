@@ -1,14 +1,14 @@
 package io.github.tony8864.usecases.user.login;
 
 import io.github.tony8864.entities.user.*;
-import io.github.tony8864.user.exception.InvalidCredentialsException;
-import io.github.tony8864.common.exception.UserNotFoundException;
+import io.github.tony8864.user.usecase.login.exception.InvalidCredentialsException;
+import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.user.repository.UserRepository;
 import io.github.tony8864.security.TokenService;
 import io.github.tony8864.security.UserClaims;
-import io.github.tony8864.user.dto.AuthRequest;
-import io.github.tony8864.user.dto.AuthenticatedUser;
-import io.github.tony8864.user.usecase.LoginUserUseCase;
+import io.github.tony8864.user.usecase.login.dto.AuthRequest;
+import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
+import io.github.tony8864.user.usecase.login.LoginUserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

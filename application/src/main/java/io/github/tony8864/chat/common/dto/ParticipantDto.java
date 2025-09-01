@@ -1,4 +1,4 @@
-package io.github.tony8864.chat.dto;
+package io.github.tony8864.chat.common.dto;
 
 import io.github.tony8864.entities.participant.Participant;
 import io.github.tony8864.entities.participant.Role;

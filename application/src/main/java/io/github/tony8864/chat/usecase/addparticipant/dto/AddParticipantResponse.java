@@ -1,16 +1,17 @@
-package io.github.tony8864.chat.dto;
+package io.github.tony8864.chat.usecase.addparticipant.dto;
 
+import io.github.tony8864.chat.common.dto.ParticipantDto;
 import io.github.tony8864.entities.chat.GroupChat;
 
 import java.util.List;
 
-public record RemoveParticipantResponse(
+public record AddParticipantResponse(
         String chatId,
-        List<ParticipantDto> participantDtos,
+        List<ParticipantDto> participants,
         String groupName
 ) {
-    public static RemoveParticipantResponse fromDomain(GroupChat chat) {
-        return new RemoveParticipantResponse(
+    public static AddParticipantResponse fromDomain(GroupChat chat) {
+        return new AddParticipantResponse(
                 chat.getChatId().getValue(),
                 chat.getParticipants().stream()
                         .map(ParticipantDto::fromDomain)

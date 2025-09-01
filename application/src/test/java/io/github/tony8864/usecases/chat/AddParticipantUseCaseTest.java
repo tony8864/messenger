@@ -1,6 +1,6 @@
 package io.github.tony8864.usecases.chat;
 
-import io.github.tony8864.chat.usecase.AddParticipantUseCase;
+import io.github.tony8864.chat.usecase.addparticipant.AddParticipantUseCase;
 import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.participant.Participant;
@@ -11,8 +11,8 @@ import io.github.tony8864.exceptions.chat.UserAlreadyParticipantException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 import io.github.tony8864.chat.repository.GroupChatRepository;
 import io.github.tony8864.user.repository.UserRepository;
-import io.github.tony8864.chat.dto.AddParticipantRequest;
-import io.github.tony8864.chat.dto.AddParticipantResponse;
+import io.github.tony8864.chat.usecase.addparticipant.dto.AddParticipantRequest;
+import io.github.tony8864.chat.usecase.addparticipant.dto.AddParticipantResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

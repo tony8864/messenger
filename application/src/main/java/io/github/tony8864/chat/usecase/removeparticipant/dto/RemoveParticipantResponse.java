@@ -1,24 +1,22 @@
-package io.github.tony8864.chat.dto;
+package io.github.tony8864.chat.usecase.removeparticipant.dto;
 
+import io.github.tony8864.chat.common.dto.ParticipantDto;
 import io.github.tony8864.entities.chat.GroupChat;
 
-import java.time.Instant;
 import java.util.List;
 
-public record CreateGroupChatResponse(
+public record RemoveParticipantResponse(
         String chatId,
-        String groupName,
         List<ParticipantDto> participantDtos,
-        Instant createdAt
+        String groupName
 ) {
-    public static CreateGroupChatResponse fromDomain(GroupChat chat) {
-        return new CreateGroupChatResponse(
+    public static RemoveParticipantResponse fromDomain(GroupChat chat) {
+        return new RemoveParticipantResponse(
                 chat.getChatId().getValue(),
-                chat.getGroupName(),
                 chat.getParticipants().stream()
                         .map(ParticipantDto::fromDomain)
                         .toList(),
-                chat.getCreatedAt()
+                chat.getGroupName()
         );
     }
 }

@@ -1,4 +1,4 @@
-package io.github.tony8864.user.exception;
+package io.github.tony8864.user.usecase.register.exception;
 
 public class UserAlreadyExistsException extends RuntimeException {
   public UserAlreadyExistsException(String email) {
