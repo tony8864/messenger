@@ -6,6 +6,7 @@ import io.github.tony8864.exceptions.chat.GroupChatDeletedException;
 import io.github.tony8864.entities.message.MessageId;
 import io.github.tony8864.exceptions.chat.InvalidGroupException;
 import io.github.tony8864.exceptions.chat.UserAlreadyParticipantException;
+import io.github.tony8864.exceptions.chat.UserNotInChatException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 
 import java.time.Instant;
@@ -16,8 +17,8 @@ public class GroupChat {
     private final ChatId chatId;
     private final List<Participant> participants;
     private final Instant createdAt;
+    private final String groupName;
 
-    private String groupName;
     private GroupChatStatus state;
     private MessageId lastMessageId;
 
@@ -52,12 +53,20 @@ public class GroupChat {
         updateState();
     }
 
-    public void removeParticipant(UserId userId, Participant participant) {
-        requireAdmin(userId);
-        participants.remove(participant);
+    public void removeParticipant(UserId requesterId, UserId targetId) {
+        requireAdmin(requesterId);
+
+        Participant toRemove = participants.stream()
+                .filter(p -> p.getUserId().equals(targetId))
+                .findFirst()
+                .orElseThrow(() -> new UserNotInChatException(targetId.getValue()));
+
+        participants.remove(toRemove);
+
         if (!hasAtLeastOneAdmin()) {
             throw new InvalidGroupException("GroupChat must have at least one ADMIN");
         }
+
         updateState();
     }
 

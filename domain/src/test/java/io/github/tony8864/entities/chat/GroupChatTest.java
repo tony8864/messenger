@@ -3,6 +3,7 @@ package io.github.tony8864.entities.chat;
 import io.github.tony8864.entities.participant.Participant;
 import io.github.tony8864.entities.participant.Role;
 import io.github.tony8864.entities.user.UserId;
+import io.github.tony8864.exceptions.chat.GroupChatDeletedException;
 import io.github.tony8864.exceptions.chat.InvalidGroupException;
 import io.github.tony8864.exceptions.chat.UserAlreadyParticipantException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
@@ -106,7 +107,7 @@ class GroupChatTest {
                 "Group"
         );
 
-        assertDoesNotThrow(() -> chat.removeParticipant(adminId, m2));
+        assertDoesNotThrow(() -> chat.removeParticipant(adminId, m2.getUserId()));
     }
 
     @Test
@@ -119,7 +120,7 @@ class GroupChatTest {
         );
 
         assertThrows(UnauthorizedOperationException.class,
-                () -> chat.removeParticipant(memberId, m2));
+                () -> chat.removeParticipant(memberId, m2.getUserId()));
     }
 
     @Test
@@ -133,7 +134,7 @@ class GroupChatTest {
 
         // removing admin leaves only members
         assertThrows(InvalidGroupException.class,
-                () -> chat.removeParticipant(adminId, admin));
+                () -> chat.removeParticipant(adminId, admin.getUserId()));
     }
 
     @Test
@@ -146,11 +147,11 @@ class GroupChatTest {
         );
 
         // Remove all non-admins first
-        chat.removeParticipant(adminId, member);
-        chat.removeParticipant(adminId, m2);
+        chat.removeParticipant(adminId, member.getUserId());
+        chat.removeParticipant(adminId, m2.getUserId());
 
-        // Now only admin remains, removing them empties the list → GroupChatDeletedException
+        // Now only admin remains, removing them leaves no admin
         assertThrows(InvalidGroupException.class,
-                () -> chat.removeParticipant(adminId, admin));
+                () -> chat.removeParticipant(adminId, admin.getUserId()));
     }
 }

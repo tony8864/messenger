@@ -2,9 +2,10 @@ package io.github.tony8864.usecases.user.register;
 
 import io.github.tony8864.entities.user.PasswordHasher;
 import io.github.tony8864.entities.user.User;
-import io.github.tony8864.repositories.UserRepository;
-import io.github.tony8864.usecases.user.register.dto.RegisterUserRequest;
-import io.github.tony8864.usecases.user.register.dto.RegisterUserResponse;
+import io.github.tony8864.user.repository.UserRepository;
+import io.github.tony8864.user.dto.RegisterUserRequest;
+import io.github.tony8864.user.dto.RegisterUserResponse;
+import io.github.tony8864.user.usecase.RegisterUserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
