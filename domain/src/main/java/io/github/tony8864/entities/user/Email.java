@@ -1,6 +1,6 @@
 package io.github.tony8864.entities.user;
 
-import io.github.tony8864.exceptions.InvalidEmailFormatException;
+import io.github.tony8864.exceptions.user.InvalidEmailFormatException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

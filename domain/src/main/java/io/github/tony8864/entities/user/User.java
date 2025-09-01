@@ -1,6 +1,6 @@
 package io.github.tony8864.entities.user;
 
-import io.github.tony8864.exceptions.EmptyUsernameException;
+import io.github.tony8864.exceptions.user.EmptyUsernameException;
 
 import java.time.Instant;
 

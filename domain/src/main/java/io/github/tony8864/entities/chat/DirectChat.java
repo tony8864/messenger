@@ -1,6 +1,6 @@
 package io.github.tony8864.entities.chat;
 
-import io.github.tony8864.exceptions.IllegalParticipantsSizeForDirectChat;
+import io.github.tony8864.exceptions.chat.IllegalParticipantsSizeForDirectChat;
 import io.github.tony8864.entities.message.MessageId;
 import io.github.tony8864.entities.user.UserId;
 

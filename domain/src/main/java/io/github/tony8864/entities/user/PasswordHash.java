@@ -1,6 +1,6 @@
 package io.github.tony8864.entities.user;
 
-import io.github.tony8864.exceptions.EmptyPasswordHashException;
+import io.github.tony8864.exceptions.user.EmptyPasswordHashException;
 
 import java.util.Objects;
 

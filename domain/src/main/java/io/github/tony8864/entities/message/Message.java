@@ -1,7 +1,7 @@
 package io.github.tony8864.entities.message;
 
 import io.github.tony8864.entities.chat.ChatId;
-import io.github.tony8864.exceptions.EmptyMessageContentException;
+import io.github.tony8864.exceptions.message.EmptyMessageContentException;
 import io.github.tony8864.entities.user.UserId;
 
 import java.time.Instant;

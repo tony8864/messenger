@@ -1,6 +1,6 @@
 package io.github.tony8864.user;
 
-import io.github.tony8864.exceptions.EmptyPasswordHashException;
+import io.github.tony8864.exceptions.user.EmptyPasswordHashException;
 import io.github.tony8864.entities.user.PasswordHash;
 import io.github.tony8864.entities.user.PasswordHasher;
 import org.junit.jupiter.api.Test;
