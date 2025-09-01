@@ -3,6 +3,8 @@ package io.github.tony8864.usecases.user.register;
 import io.github.tony8864.entities.user.*;
 import io.github.tony8864.exceptions.UserAlreadyExistsException;
 import io.github.tony8864.repositories.UserRepository;
+import io.github.tony8864.usecases.user.register.dto.RegisterUserRequest;
+import io.github.tony8864.usecases.user.register.dto.RegisterUserResponse;
 
 public class RegisterUserUseCase {
 

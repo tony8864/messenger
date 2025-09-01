@@ -10,6 +10,8 @@ import io.github.tony8864.exceptions.UserNotFoundException;
 import io.github.tony8864.repositories.UserRepository;
 import io.github.tony8864.security.TokenService;
 import io.github.tony8864.security.UserClaims;
+import io.github.tony8864.usecases.user.login.dto.AuthRequest;
+import io.github.tony8864.usecases.user.login.dto.AuthenticatedUser;
 
 import java.time.Duration;
 import java.util.Set;
@@ -32,7 +34,7 @@ public class LoginUserUseCase {
     public AuthenticatedUser login(AuthRequest request) {
         Email email = Email.of(request.email());
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException(email.getValue()));
+                .orElseThrow(() -> UserNotFoundException.byEmail(email.getValue()));
 
         if (!user.verifyPassword(request.password(), passwordHasher)) {
             throw new InvalidCredentialsException();

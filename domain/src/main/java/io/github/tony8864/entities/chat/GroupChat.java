@@ -9,6 +9,7 @@ import io.github.tony8864.exceptions.chat.UserAlreadyParticipantException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 
 public class GroupChat {
@@ -82,5 +83,17 @@ public class GroupChat {
         else {
             state = GroupChatStatus.ACTIVE;
         }
+    }
+
+    public ChatId getChatId() {
+        return chatId;
+    }
+
+    public List<Participant> getParticipants() {
+        return Collections.unmodifiableList(participants);
+    }
+
+    public String getGroupName() {
+        return groupName;
     }
 }

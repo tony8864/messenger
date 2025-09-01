@@ -3,6 +3,8 @@ package io.github.tony8864.entities.participant;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.exceptions.user.InvalidParticipantException;
 
+import java.util.Objects;
+
 public class Participant {
     private final UserId userId;
     private final Role role;
@@ -24,5 +26,23 @@ public class Participant {
 
     public UserId getUserId() {
         return userId;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Participant)) return false;
+        Participant that = (Participant) o;
+        return Objects.equals(userId, that.userId) &&
+                role == that.role;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, role);
     }
 }

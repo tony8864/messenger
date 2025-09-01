@@ -1,4 +1,4 @@
-package io.github.tony8864.usecases.user.register;
+package io.github.tony8864.usecases.user.register.dto;
 
 public record RegisterUserRequest(
         String username,

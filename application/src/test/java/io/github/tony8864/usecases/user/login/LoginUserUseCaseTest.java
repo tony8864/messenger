@@ -6,6 +6,8 @@ import io.github.tony8864.exceptions.UserNotFoundException;
 import io.github.tony8864.repositories.UserRepository;
 import io.github.tony8864.security.TokenService;
 import io.github.tony8864.security.UserClaims;
+import io.github.tony8864.usecases.user.login.dto.AuthRequest;
+import io.github.tony8864.usecases.user.login.dto.AuthenticatedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

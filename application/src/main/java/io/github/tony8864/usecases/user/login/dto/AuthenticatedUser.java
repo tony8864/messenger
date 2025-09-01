@@ -1,4 +1,4 @@
-package io.github.tony8864.usecases.user.login;
+package io.github.tony8864.usecases.user.login.dto;
 
 import io.github.tony8864.entities.user.User;
 
