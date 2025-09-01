@@ -38,6 +38,6 @@ public class RemoveParticipantUseCase {
         chat.removeParticipant(requesterId, removeUserId);
 
         groupChatRepository.save(chat);
-        return RemoveParticipantResponse.from(chat);
+        return RemoveParticipantResponse.fromDomain(chat);
     }
 }

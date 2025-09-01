@@ -44,6 +44,6 @@ public class AddParticipantUseCase {
         chat.addParticipant(requesterId, participant);
 
         groupChatRepository.save(chat);
-        return AddParticipantResponse.from(chat);
+        return AddParticipantResponse.fromDomain(chat);
     }
 }

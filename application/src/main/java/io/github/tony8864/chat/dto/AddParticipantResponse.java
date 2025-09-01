@@ -9,7 +9,7 @@ public record AddParticipantResponse(
         List<ParticipantDto> participants,
         String groupName
 ) {
-    public static AddParticipantResponse from(GroupChat chat) {
+    public static AddParticipantResponse fromDomain(GroupChat chat) {
         return new AddParticipantResponse(
                 chat.getChatId().getValue(),
                 chat.getParticipants().stream()

@@ -2,20 +2,23 @@ package io.github.tony8864.chat.dto;
 
 import io.github.tony8864.entities.chat.GroupChat;
 
+import java.time.Instant;
 import java.util.List;
 
-public record RemoveParticipantResponse(
+public record CreateGroupChatResponse(
         String chatId,
+        String groupName,
         List<ParticipantDto> participantDtos,
-        String groupName
+        Instant createdAt
 ) {
-    public static RemoveParticipantResponse fromDomain(GroupChat chat) {
-        return new RemoveParticipantResponse(
+    public static CreateGroupChatResponse fromDomain(GroupChat chat) {
+        return new CreateGroupChatResponse(
                 chat.getChatId().getValue(),
+                chat.getGroupName(),
                 chat.getParticipants().stream()
                         .map(ParticipantDto::fromDomain)
                         .toList(),
-                chat.getGroupName()
+                chat.getCreatedAt()
         );
     }
 }

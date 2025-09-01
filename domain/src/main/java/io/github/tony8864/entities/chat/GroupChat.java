@@ -105,4 +105,8 @@ public class GroupChat {
     public String getGroupName() {
         return groupName;
     }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }
