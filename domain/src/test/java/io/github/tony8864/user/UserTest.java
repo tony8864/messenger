@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class UserTest {
     private final UserId userId = UserId.of("11111111-1111-1111-1111-111111111111");
-    private final Email email = Email.newEmail("user@example.com");
+    private final Email email = Email.of("user@example.com");
     private final PasswordHash password = PasswordHash.newHash("hashedPassword123");
 
     @Test

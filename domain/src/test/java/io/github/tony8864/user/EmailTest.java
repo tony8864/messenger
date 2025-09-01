@@ -8,40 +8,40 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EmailTest {
     @Test
-    void newEmailShouldCreateInstanceWithValidEmail() {
-        Email email = Email.newEmail("user@example.com");
+    void ofShouldCreateInstanceWithValidEmail() {
+        Email email = Email.of("user@example.com");
         assertNotNull(email);
         assertEquals("user@example.com", email.getValue());
     }
 
     @Test
-    void newEmailShouldThrowExceptionForMissingAtSymbol() {
+    void ofShouldThrowExceptionForMissingAtSymbol() {
         assertThrows(InvalidEmailFormatException.class,
-                () -> Email.newEmail("userexample.com"));
+                () -> Email.of("userexample.com"));
     }
 
     @Test
-    void newEmailShouldThrowExceptionForMissingDomain() {
+    void ofShouldThrowExceptionForMissingDomain() {
         assertThrows(InvalidEmailFormatException.class,
-                () -> Email.newEmail("user@"));
+                () -> Email.of("user@"));
     }
 
     @Test
-    void newEmailShouldThrowExceptionForMissingLocalPart() {
+    void ofShouldThrowExceptionForMissingLocalPart() {
         assertThrows(InvalidEmailFormatException.class,
-                () -> Email.newEmail("@example.com"));
+                () -> Email.of("@example.com"));
     }
 
     @Test
-    void newEmailShouldThrowExceptionForInvalidTld() {
+    void ofShouldThrowExceptionForInvalidTld() {
         assertThrows(InvalidEmailFormatException.class,
-                () -> Email.newEmail("user@example.c"));
+                () -> Email.of("user@example.c"));
     }
 
     @Test
-    void newEmailShouldBeCaseInsensitive() {
-        Email email1 = Email.newEmail("USER@EXAMPLE.COM");
-        Email email2 = Email.newEmail("user@example.com");
+    void ofShouldBeCaseInsensitive() {
+        Email email1 = Email.of("USER@EXAMPLE.COM");
+        Email email2 = Email.of("user@example.com");
 
         // they won't be equal objects (no equals/hashCode override),
         // but both must be accepted and retain original casing

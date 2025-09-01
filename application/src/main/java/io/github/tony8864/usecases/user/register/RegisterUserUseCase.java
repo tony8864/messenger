@@ -15,7 +15,7 @@ public class RegisterUserUseCase {
     }
 
     public RegisterUserResponse register(RegisterUserRequest request) {
-        Email email = Email.newEmail(request.email());
+        Email email = Email.of(request.email());
 
         userRepository.findByEmail(email)
                 .ifPresent(u -> {
