@@ -17,8 +17,8 @@ public class GroupChat {
     private final ChatId chatId;
     private final List<Participant> participants;
     private final Instant createdAt;
-    private final String groupName;
 
+    private String groupName;
     private GroupChatStatus state;
     private MessageId lastMessageId;
 
@@ -42,6 +42,13 @@ public class GroupChat {
             throw new InvalidGroupException("GroupChat must have at least one ADMIN");
         }
         return new GroupChat(chatId, participants, groupName);
+    }
+
+    public void rename(String newGroupName) {
+        if (newGroupName == null || newGroupName.isBlank()) {
+            throw new InvalidGroupException("GroupChat cannot have an empty name");
+        }
+        this.groupName = newGroupName;
     }
 
     public void addParticipant(UserId userId, Participant participant) {
