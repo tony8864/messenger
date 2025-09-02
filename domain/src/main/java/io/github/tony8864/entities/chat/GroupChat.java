@@ -44,6 +44,15 @@ public class GroupChat {
         return new GroupChat(chatId, participants, groupName);
     }
 
+    public void updateLastMessage(MessageId messageId) {
+        this.lastMessageId = messageId;
+    }
+
+    public boolean canSendMessage(UserId userId) {
+        return participants.stream()
+                .anyMatch(p -> p.getUserId().equals(userId));
+    }
+
     public void rename(String newGroupName) {
         if (newGroupName == null || newGroupName.isBlank()) {
             throw new InvalidGroupException("GroupChat cannot have an empty name");

@@ -46,6 +46,7 @@ public class Message {
         updatedAt = Instant.now();
     }
 
+
     public Instant getCreatedAt() {
         return createdAt;
     }

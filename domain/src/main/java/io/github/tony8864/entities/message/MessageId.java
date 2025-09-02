@@ -18,6 +18,10 @@ public class MessageId {
         return new MessageId(value);
     }
 
+    public String getValue() {
+        return value;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
