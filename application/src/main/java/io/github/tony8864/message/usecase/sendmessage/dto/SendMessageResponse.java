@@ -1,4 +1,4 @@
-package io.github.tony8864.message.usecase.dto;
+package io.github.tony8864.message.usecase.sendmessage.dto;
 
 import io.github.tony8864.entities.message.Message;
 

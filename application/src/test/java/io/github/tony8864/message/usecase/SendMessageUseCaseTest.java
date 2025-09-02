@@ -10,8 +10,9 @@ import io.github.tony8864.entities.message.Message;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 import io.github.tony8864.message.repository.MessageRepository;
-import io.github.tony8864.message.usecase.dto.SendMessageRequest;
-import io.github.tony8864.message.usecase.dto.SendMessageResponse;
+import io.github.tony8864.message.usecase.sendmessage.SendMessageUseCase;
+import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageRequest;
+import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package io.github.tony8864.message.usecase;
+package io.github.tony8864.message.usecase.sendmessage;
 
 import io.github.tony8864.chat.common.exception.GroupChatNotFoundException;
 import io.github.tony8864.chat.repository.DirectChatRepository;
@@ -11,8 +11,8 @@ import io.github.tony8864.entities.message.MessageId;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 import io.github.tony8864.message.repository.MessageRepository;
-import io.github.tony8864.message.usecase.dto.SendMessageRequest;
-import io.github.tony8864.message.usecase.dto.SendMessageResponse;
+import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageRequest;
+import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageResponse;
 
 public class SendMessageUseCase {
     private final MessageRepository messageRepository;
