@@ -2,7 +2,7 @@ name: Build & Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout repository   # label for the step
-        uses: action/checkout@v3    # prebuilt action: downloads the repository code into the VM
+        uses: actions/checkout@v3    # prebuilt action: downloads the repository code into the VM
 
       - name: Set up JDK 17           # label for the step
         uses: actions/setup-java@v3   # prebuilt action: installs Java on the VM
