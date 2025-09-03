@@ -20,6 +20,10 @@ public class PasswordHash {
         return hasher.verify(rawPassword, this.hash);
     }
 
+    public String getHash() {
+        return hash;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

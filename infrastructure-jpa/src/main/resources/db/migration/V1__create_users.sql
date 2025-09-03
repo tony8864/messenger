@@ -2,7 +2,7 @@ CREATE TABLE users (
     id UUID PRIMARY key,
     username VARCHAR(50) NOT NULL UNIQUE,
     email VARCHAR(320) NOT NULL UNIQUE,
-    passwrd_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'OFFLINE',
     created_at TIMESTAMPTZ NOT NULL
 );

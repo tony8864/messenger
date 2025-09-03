@@ -13,7 +13,10 @@ public class User {
     private PasswordHash passwordHash;
     private PresenceStatus status;
 
-    private User(UserId userId, String username, Email email, PasswordHash passwordHash) {
+    private User(UserId userId,
+                 String username,
+                 Email email,
+                 PasswordHash passwordHash) {
         this.userId = userId;
         this.username = username;
         this.email = email;
@@ -22,9 +25,27 @@ public class User {
         this.createdAt = Instant.now();
     }
 
+    private User(UserId userId,
+                 String username,
+                 Email email,
+                 PasswordHash passwordHash,
+                 PresenceStatus status,
+                 Instant createdAt) {
+        this.userId = userId;
+        this.username = username;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.status = status;
+        this.createdAt = createdAt;
+    }
+
     public static User create(UserId userId, String username, Email email, PasswordHash passwordHash) {
         if (username == null || username.isBlank()) throw new EmptyUsernameException();
         return new User(userId, username, email, passwordHash);
+    }
+
+    public static User restore(UserId id, String username, Email email, PasswordHash passwordHash, PresenceStatus status, Instant createdAt) {
+        return new User(id, username, email, passwordHash, status, createdAt);
     }
 
     public boolean verifyPassword(String rawPassword, PasswordHasher hasher) {
@@ -47,15 +68,13 @@ public class User {
 
     public Email getEmail() { return email;}
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username;}
 
     public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public PresenceStatus getStatus() {
-        return status;
-    }
+    public PasswordHash getPasswordHash() { return passwordHash; }
+
+    public PresenceStatus getStatus() { return status; }
 }
