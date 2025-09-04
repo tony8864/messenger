@@ -125,4 +125,12 @@ public class GroupChat {
     public Instant getCreatedAt() {
         return createdAt;
     }
+
+    public MessageId getLastMessageId() {
+        return lastMessageId;
+    }
+
+    public GroupChatStatus getState() {
+        return state;
+    }
 }

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class DirectChatEntity extends ChatEntity{
+public class DirectChatEntity extends ChatEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user1_id", nullable = false)

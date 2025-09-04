@@ -1,9 +1,16 @@
 package io.github.tony8864.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "group_chat_participants")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @IdClass(GroupChatParticipantId.class)
 public class GroupChatParticipantEntity {
 
