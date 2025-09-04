@@ -1,6 +1,6 @@
-package io.github.tony8864.repositories;
+package io.github.tony8864.repository;
 
-import io.github.tony8864.mappings.UserEntity;
+import io.github.tony8864.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

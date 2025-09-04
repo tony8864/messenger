@@ -1,4 +1,4 @@
-package io.github.tony8864.mappings;
+package io.github.tony8864.entity;
 
 import java.io.Serializable;
 import java.util.UUID;

@@ -1,6 +1,6 @@
-package io.github.tony8864.repositories;
+package io.github.tony8864.repository;
 
-import io.github.tony8864.mappings.MessageEntity;
+import io.github.tony8864.entity.MessageEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

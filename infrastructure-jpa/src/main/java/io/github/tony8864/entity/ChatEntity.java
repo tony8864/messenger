@@ -1,8 +1,7 @@
-package io.github.tony8864.mappings;
+package io.github.tony8864.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

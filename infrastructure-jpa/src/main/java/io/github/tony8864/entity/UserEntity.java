@@ -1,4 +1,4 @@
-package io.github.tony8864.mappings;
+package io.github.tony8864.entity;
 
 import io.github.tony8864.entities.user.*;
 import jakarta.persistence.Column;
@@ -36,26 +36,4 @@ public class UserEntity {
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
-
-    public User toDomain() {
-        return User.restore(
-                UserId.of(id.toString()),
-                username,
-                Email.of(email),
-                PasswordHash.newHash(passwordHash),
-                PresenceStatus.valueOf(status),
-                createdAt
-        );
-    }
-
-    public static UserEntity fromDomain(User user) {
-        return UserEntity.builder()
-                .id(UUID.fromString(user.getUserId().getValue())) // convert String -> UUID
-                .username(user.getUsername())
-                .email(user.getEmail().getValue())
-                .passwordHash(user.getPasswordHash().getHash())
-                .status(user.getStatus().name())
-                .createdAt(user.getCreatedAt())
-                .build();
-    }
 }

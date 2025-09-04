@@ -4,12 +4,13 @@ import io.github.tony8864.chat.repository.DirectChatRepository;
 import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.DirectChat;
 import io.github.tony8864.entities.user.UserId;
-import io.github.tony8864.mappings.DirectChatEntity;
-import io.github.tony8864.mappings.MessageEntity;
-import io.github.tony8864.mappings.UserEntity;
-import io.github.tony8864.repositories.SpringDataDirectChatRepository;
-import io.github.tony8864.repositories.SpringDataMessageRepository;
-import io.github.tony8864.repositories.SpringDataUserRepository;
+import io.github.tony8864.entity.DirectChatEntity;
+import io.github.tony8864.entity.MessageEntity;
+import io.github.tony8864.entity.UserEntity;
+import io.github.tony8864.mapping.DirectChatMapper;
+import io.github.tony8864.repository.SpringDataDirectChatRepository;
+import io.github.tony8864.repository.SpringDataMessageRepository;
+import io.github.tony8864.repository.SpringDataUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,17 +25,18 @@ public class JpaDirectChatRepository implements DirectChatRepository {
     private final SpringDataDirectChatRepository chatRepository;
     private final SpringDataMessageRepository messageRepository;
     private final SpringDataUserRepository userRepository;
+    private final DirectChatMapper directChatMapper;
 
     @Override
     public Optional<DirectChat> findById(ChatId chatId) {
         return chatRepository.findById(UUID.fromString(chatId.getValue()))
-                .map(DirectChatEntity::toDomain);
+                .map(directChatMapper::toDomain);
     }
 
     @Override
     public Optional<DirectChat> findByUsers(UserId user1, UserId user2) {
         return chatRepository.findByUsers(UUID.fromString(user1.getValue()), UUID.fromString(user2.getValue()))
-                .map(DirectChatEntity::toDomain);
+                .map(directChatMapper::toDomain);
     }
 
     @Override
@@ -47,7 +49,7 @@ public class JpaDirectChatRepository implements DirectChatRepository {
             lastMessage = messageRepository.getReferenceById(UUID.fromString(directChat.getLastMessageId().getValue()));
         }
 
-        chatRepository.save(DirectChatEntity.fromDomain(directChat, user1, user2, lastMessage));
+        chatRepository.save(directChatMapper.fromDomain(directChat, user1, user2, lastMessage));
     }
 
     @Override
