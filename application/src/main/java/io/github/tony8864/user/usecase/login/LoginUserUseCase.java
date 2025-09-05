@@ -43,7 +43,7 @@ public class LoginUserUseCase {
         user.setPresenceStatus(PresenceStatus.ONLINE);
         userRepository.save(user);
 
-        UserClaims claims = new UserClaims(
+        UserClaims claims = UserClaims.fromDomain(
                 user.getUserId().toString(),
                 user.getEmail().getValue(),
                 Set.of(Role.MEMBER)
