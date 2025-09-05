@@ -10,8 +10,8 @@ public class Message {
     private final MessageId messageId;
     private final ChatId chatId;
     private final UserId userId;
-    private final Instant createdAt;
 
+    private Instant createdAt;
     private String content;
     private MessageStatus status;
     private Instant updatedAt;
@@ -28,6 +28,22 @@ public class Message {
     public static Message create(MessageId messageId, ChatId chatId, UserId userId, String content) {
         if (content == null || content.isBlank()) throw new EmptyMessageContentException();
         return new Message(messageId, chatId, userId, content);
+    }
+
+    public static Message restore(
+            MessageId messageId,
+            ChatId chatId,
+            UserId userId,
+            String content,
+            Instant createdAt,
+            MessageStatus status,
+            Instant updatedAt
+    ) {
+        Message message = new Message(messageId, chatId, userId, content);
+        message.createdAt = createdAt;
+        message.status = status;
+        message.updatedAt = updatedAt;
+        return message;
     }
 
     public void markDelivered() {
