@@ -31,3 +31,4 @@ jobs:
         env:
           TESTCONTAINERS_RYUK_DISABLED: true
           TESTCONTAINERS_CHECKS_DISABLE: true
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
