@@ -1,11 +1,9 @@
 package io.github.tony8864.user;
 
-import io.github.tony8864.user.dto.LoginApiRequest;
-import io.github.tony8864.user.dto.LoginApiResponse;
-import io.github.tony8864.user.dto.RegisterUserApiRequest;
-import io.github.tony8864.user.dto.RegisterUserApiResponse;
+import io.github.tony8864.user.dto.*;
 import io.github.tony8864.user.mapper.UserApiMapper;
 import io.github.tony8864.user.usecase.login.LoginUserUseCase;
+import io.github.tony8864.user.usecase.logout.LogoutUseCase;
 import io.github.tony8864.user.usecase.register.RegisterUserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final RegisterUserUseCase registerUserUseCase;
     private final LoginUserUseCase loginUserUseCase;
+    private final LogoutUseCase logoutUseCase;
+
     private final UserApiMapper mapper;
 
     @PostMapping("/register")
@@ -37,5 +37,11 @@ public class UserController {
         var authenticatedUser = loginUserUseCase.login(request);
         var response = mapper.toApi(authenticatedUser);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<LogoutApiResponse> logout(@RequestBody LogoutApiRequest request) {
+        logoutUseCase.logout(request.userId());
+        return ResponseEntity.ok(LogoutApiResponse.success(request.userId()));
     }
 }

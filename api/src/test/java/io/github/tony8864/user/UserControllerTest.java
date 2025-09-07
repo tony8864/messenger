@@ -1,8 +1,11 @@
 package io.github.tony8864.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.tony8864.ChatApplication;
 import io.github.tony8864.entities.user.Email;
+import io.github.tony8864.entities.user.PresenceStatus;
 import io.github.tony8864.user.dto.LoginApiRequest;
+import io.github.tony8864.user.dto.LogoutApiRequest;
 import io.github.tony8864.user.dto.RegisterUserApiRequest;
 import io.github.tony8864.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -16,8 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
 
@@ -56,9 +57,10 @@ class UserControllerTest {
     @Test
     void shouldRegisterUserSuccessfully() throws Exception {
         String uniqueEmail = "tony_" + UUID.randomUUID() + "@example.com";
+        String uniqueUsername = "tony_" + UUID.randomUUID();
 
         var request = new RegisterUserApiRequest(
-                "tony",
+                uniqueUsername,
                 uniqueEmail,
                 "secret123"
         );
@@ -68,21 +70,22 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.userId").exists())
-                .andExpect(jsonPath("$.username").value("tony"))
+                .andExpect(jsonPath("$.username").value(uniqueUsername))
                 .andExpect(jsonPath("$.email").value(uniqueEmail));
 
         // Now check DB state
-        var saved = userRepository.findByEmail(Email.of("tony@example.com"));
+        var saved = userRepository.findByEmail(Email.of(uniqueEmail));
         assertTrue(saved.isPresent(), "User should be persisted in the database");
-        assertEquals("tony", saved.get().getUsername());
+        assertEquals(uniqueUsername, saved.get().getUsername());
     }
 
     @Test
     void shouldLoginSuccessfully() throws Exception {
-        // First register a user
         String uniqueEmail = "tony_" + UUID.randomUUID() + "@example.com";
+        String uniqueUsername = "tony_" + UUID.randomUUID();
 
-        var registerRequest = new RegisterUserApiRequest("tony", uniqueEmail, "secret123");
+        // First register a user
+        var registerRequest = new RegisterUserApiRequest(uniqueUsername, uniqueEmail, "secret123");
         mockMvc.perform(post("/api/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
@@ -95,6 +98,42 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").exists())
-                .andExpect(jsonPath("$.username").value("tony"));
+                .andExpect(jsonPath("$.username").value(uniqueUsername));
+    }
+
+    @Test
+    void shouldLogoutSuccessfully() throws Exception {
+        String uniqueEmail = "tony_" + UUID.randomUUID() + "@example.com";
+        String uniqueUsername = "tony_" + UUID.randomUUID();
+
+        // 1. Register the user
+        var registerRequest = new RegisterUserApiRequest(
+                uniqueUsername,
+                uniqueEmail,
+                "secret123"
+        );
+
+        mockMvc.perform(post("/api/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(registerRequest)))
+                .andExpect(status().isCreated());
+
+        // 2. Fetch the user from the DB
+        var user = userRepository.findByEmail(Email.of(uniqueEmail))
+                .orElseThrow(() -> new IllegalStateException("User not found after registration"));
+
+        // 3. Logout the user
+        var logoutRequest = new LogoutApiRequest(user.getUserId().getValue());
+        mockMvc.perform(post("/api/users/logout")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(logoutRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message")
+                        .value("User " + user.getUserId().getValue() + " logged out successfully."));
+
+        // 4. Verify DB state (user status updated to OFFLINE)
+        var updated = userRepository.findById(user.getUserId())
+                .orElseThrow(() -> new IllegalStateException("User not found after logout"));
+        assertEquals(PresenceStatus.OFFLINE, updated.getStatus());
     }
 }
