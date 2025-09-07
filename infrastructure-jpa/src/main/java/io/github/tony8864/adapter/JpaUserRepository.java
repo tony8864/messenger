@@ -3,8 +3,7 @@ package io.github.tony8864.adapter;
 import io.github.tony8864.entities.user.Email;
 import io.github.tony8864.entities.user.User;
 import io.github.tony8864.entities.user.UserId;
-import io.github.tony8864.entity.UserEntity;
-import io.github.tony8864.mapping.UserMapper;
+import io.github.tony8864.mapping.UserJpaMapper;
 import io.github.tony8864.repository.SpringDataUserRepository;
 import io.github.tony8864.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.UUID;
 public class JpaUserRepository implements UserRepository {
 
     private final SpringDataUserRepository springDataUserRepository;
-    private final UserMapper userMapper;
+    private final UserJpaMapper userMapper;
 
     @Override
     public Optional<User> findById(UserId userId) {

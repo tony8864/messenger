@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class UserMapper {
+public class UserJpaMapper {
     public User toDomain(UserEntity entity) {
         return User.restore(
                 UserId.of(entity.getId().toString()),

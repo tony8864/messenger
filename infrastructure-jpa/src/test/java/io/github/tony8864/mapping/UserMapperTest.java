@@ -10,7 +10,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserMapperTest {
-    private final UserMapper mapper = new UserMapper();
+    private final UserJpaMapper mapper = new UserJpaMapper();
 
     @Test
     void toDomain_shouldMapEntityToDomain() {
