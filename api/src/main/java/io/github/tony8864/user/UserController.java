@@ -1,8 +1,11 @@
 package io.github.tony8864.user;
 
+import io.github.tony8864.user.dto.LoginApiRequest;
+import io.github.tony8864.user.dto.LoginApiResponse;
 import io.github.tony8864.user.dto.RegisterUserApiRequest;
 import io.github.tony8864.user.dto.RegisterUserApiResponse;
 import io.github.tony8864.user.mapper.UserApiMapper;
+import io.github.tony8864.user.usecase.login.LoginUserUseCase;
 import io.github.tony8864.user.usecase.register.RegisterUserUseCase;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,12 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
     private final RegisterUserUseCase registerUserUseCase;
+    private final LoginUserUseCase loginUserUseCase;
     private final UserApiMapper mapper;
 
     @PostMapping("/register")
     public ResponseEntity<RegisterUserApiResponse> reigster(@RequestBody RegisterUserApiRequest apiRequest) {
         var request = mapper.toApplication(apiRequest);
-        var response = registerUserUseCase.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toApi(response));
+        var registeredUser = registerUserUseCase.register(request);
+        var response = mapper.toApi(registeredUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginApiResponse> login(@RequestBody LoginApiRequest apiRequest) {
+        var request = mapper.toApplication(apiRequest);
+        var authenticatedUser = loginUserUseCase.login(request);
+        var response = mapper.toApi(authenticatedUser);
+        return ResponseEntity.ok(response);
     }
 }
