@@ -1,8 +1,8 @@
 package io.github.tony8864.chat.group.mapper;
 
-import io.github.tony8864.chat.group.dto.ParticipantApiDto;
-import io.github.tony8864.chat.group.dto.RenameGroupChatApiRequest;
-import io.github.tony8864.chat.group.dto.RenameGroupChatApiResponse;
+import io.github.tony8864.chat.group.dto.*;
+import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantRequest;
+import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantResponse;
 import io.github.tony8864.chat.usecase.renamegroupchat.dto.RenameGroupChatRequest;
 import io.github.tony8864.chat.usecase.renamegroupchat.dto.RenameGroupChatResponse;
 import org.springframework.stereotype.Component;
@@ -10,6 +10,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class GroupChatApiMapper {
 
+    // --- Remove Participant ---
+    public RemoveParticipantRequest toApplication(RemoveParticipantApiRequest apiRequest) {
+        return new RemoveParticipantRequest(
+                apiRequest.chatId(),
+                apiRequest.requesterId(),
+                apiRequest.removeUserId()
+        );
+    }
+
+    public RemoveParticipantApiResponse toApi(RemoveParticipantResponse appResponse) {
+        return new RemoveParticipantApiResponse(
+                appResponse.chatId(),
+                appResponse.participantDtos().stream()
+                        .map(p -> new ParticipantApiDto(p.userId(), p.role().name()))
+                        .toList(),
+                appResponse.groupName()
+        );
+    }
+
+    // --- Rename Group Chat ---
     public RenameGroupChatRequest toApplication(RenameGroupChatApiRequest apiRequest) {
         return new RenameGroupChatRequest(
                 apiRequest.chatId(),

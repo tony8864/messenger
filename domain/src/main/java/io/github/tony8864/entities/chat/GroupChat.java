@@ -10,6 +10,7 @@ import io.github.tony8864.exceptions.chat.UserNotInChatException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class GroupChat {
         if (!hasAdmin) {
             throw new InvalidGroupException("GroupChat must have at least one ADMIN");
         }
-        return new GroupChat(chatId, participants, groupName);
+        return new GroupChat(chatId, new ArrayList<>(participants), groupName);
     }
 
     public void updateLastMessage(MessageId messageId) {

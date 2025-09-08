@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = ChatApplication.class)
 @AutoConfigureMockMvc
 @Testcontainers
-class GroupChatControllerTest {
+class GroupChatRenameControllerTest {
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16")
             .withDatabaseName("testdb")
