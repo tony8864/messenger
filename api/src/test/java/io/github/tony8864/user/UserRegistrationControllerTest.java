@@ -93,6 +93,7 @@ public class UserRegistrationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(secondRequest)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("User with email: " + uniqueEmail + " already exists"));
+                .andExpect(jsonPath("$.code").value("USER_ALREADY_EXISTS"))
+                .andExpect(jsonPath("$.message").value("User with email: " + uniqueEmail + " already exists"));
     }
 }

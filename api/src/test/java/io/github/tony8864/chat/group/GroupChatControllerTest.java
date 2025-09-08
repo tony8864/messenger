@@ -9,9 +9,6 @@ import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.participant.Participant;
 import io.github.tony8864.entities.participant.Role;
 import io.github.tony8864.entities.user.*;
-import io.github.tony8864.user.dto.LoginApiRequest;
-import io.github.tony8864.user.dto.LogoutApiRequest;
-import io.github.tony8864.user.dto.RegisterUserApiRequest;
 import io.github.tony8864.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +25,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
