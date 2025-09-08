@@ -1,0 +1,30 @@
+package io.github.tony8864.chat.group;
+
+import io.github.tony8864.chat.group.dto.RenameGroupChatApiRequest;
+import io.github.tony8864.chat.group.dto.RenameGroupChatApiResponse;
+import io.github.tony8864.chat.group.mapper.GroupChatApiMapper;
+import io.github.tony8864.chat.usecase.renamegroupchat.RenameGroupChatUseCase;
+import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/chats/group")
+@AllArgsConstructor
+public class GroupChatController {
+
+    private final RenameGroupChatUseCase renameGroupChatUseCase;
+
+    private final GroupChatApiMapper mapper;
+
+    @PostMapping("/rename")
+    public ResponseEntity<RenameGroupChatApiResponse> renameGroupChat(@RequestBody RenameGroupChatApiRequest apiRequest) {
+        var request = mapper.toApplication(apiRequest);
+        var response = renameGroupChatUseCase.rename(request);
+        var apiResponse = mapper.toApi(response);
+        return ResponseEntity.ok(apiResponse);
+    }
+}
