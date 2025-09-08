@@ -1,6 +1,7 @@
 package io.github.tony8864.jwt;
 
 import io.github.tony8864.security.UserClaims;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -64,7 +65,7 @@ class JwtAuthenticationFilterTest {
     void shouldRejectWhenTokenInvalid() throws Exception {
         when(request.getRequestURI()).thenReturn("/api/group-chats");
         when(request.getHeader("Authorization")).thenReturn("Bearer badtoken");
-        when(tokenService.verifyToken("badtoken")).thenThrow(new RuntimeException("Invalid"));
+        when(tokenService.verifyToken("badtoken")).thenThrow(new InvalidTokenException("Invalid"));
 
         filter.doFilter(request, response, chain);
 

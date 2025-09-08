@@ -1,6 +1,7 @@
 package io.github.tony8864.jwt;
 
 import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,7 +49,7 @@ public class JwtAuthenticationFilter implements Filter {
 
             httpServletRequest.setAttribute("authenticatedUser", user);
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (InvalidTokenException e) {
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }

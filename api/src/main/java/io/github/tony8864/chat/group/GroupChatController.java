@@ -6,6 +6,8 @@ import io.github.tony8864.chat.usecase.deletegroupchat.DeleteGroupChatUseCase;
 import io.github.tony8864.chat.usecase.deletegroupchat.dto.DeleteGroupChatRequest;
 import io.github.tony8864.chat.usecase.removeparticipant.RemoveParticipantUseCase;
 import io.github.tony8864.chat.usecase.renamegroupchat.RenameGroupChatUseCase;
+import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,9 @@ public class GroupChatController {
     private final GroupChatApiMapper mapper;
 
     @PostMapping("/rename")
-    public ResponseEntity<RenameGroupChatApiResponse> renameGroupChat(@RequestBody RenameGroupChatApiRequest apiRequest) {
-        var appRequest = mapper.toApplication(apiRequest);
+    public ResponseEntity<RenameGroupChatApiResponse> renameGroupChat(HttpServletRequest httpServletRequest, @RequestBody RenameGroupChatApiRequest apiRequest) {
+        var requester = (AuthenticatedUser) httpServletRequest.getAttribute("authenticatedUser");
+        var appRequest = mapper.toApplication(apiRequest, requester.userId());
         var appResponse = renameGroupChatUseCase.rename(appRequest);
         var apiResponse = mapper.toApi(appResponse);
         return ResponseEntity.ok(apiResponse);

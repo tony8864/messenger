@@ -30,10 +30,10 @@ public class GroupChatApiMapper {
     }
 
     // --- Rename Group Chat ---
-    public RenameGroupChatRequest toApplication(RenameGroupChatApiRequest apiRequest) {
+    public RenameGroupChatRequest toApplication(RenameGroupChatApiRequest apiRequest, String requesterId) {
         return new RenameGroupChatRequest(
                 apiRequest.chatId(),
-                apiRequest.requesterId(),
+                requesterId,
                 apiRequest.newGroupName()
         );
     }
