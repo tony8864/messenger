@@ -1,6 +1,7 @@
 package io.github.tony8864.chat.group.config;
 
 import io.github.tony8864.chat.repository.GroupChatRepository;
+import io.github.tony8864.chat.usecase.deletegroupchat.DeleteGroupChatUseCase;
 import io.github.tony8864.chat.usecase.removeparticipant.RemoveParticipantUseCase;
 import io.github.tony8864.chat.usecase.renamegroupchat.RenameGroupChatUseCase;
 import io.github.tony8864.user.repository.UserRepository;
@@ -18,5 +19,10 @@ public class GroupChatConfig {
     @Bean
     public RemoveParticipantUseCase removeParticipantUseCase(UserRepository userRepository, GroupChatRepository groupChatRepository) {
         return new RemoveParticipantUseCase(userRepository, groupChatRepository);
+    }
+
+    @Bean
+    public DeleteGroupChatUseCase deleteGroupChatUseCase(UserRepository userRepository, GroupChatRepository groupChatRepository) {
+        return new DeleteGroupChatUseCase(userRepository, groupChatRepository);
     }
 }
