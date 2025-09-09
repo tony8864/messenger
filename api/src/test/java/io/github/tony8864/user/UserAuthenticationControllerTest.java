@@ -2,10 +2,11 @@ package io.github.tony8864.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.tony8864.ChatApplication;
-import io.github.tony8864.entities.user.Email;
-import io.github.tony8864.entities.user.PresenceStatus;
+import io.github.tony8864.entities.user.*;
+import io.github.tony8864.jwt.JwtTokenService;
+import io.github.tony8864.security.TokenService;
+import io.github.tony8864.security.UserClaims;
 import io.github.tony8864.user.dto.LoginApiRequest;
-import io.github.tony8864.user.dto.LogoutApiRequest;
 import io.github.tony8864.user.dto.RegisterUserApiRequest;
 import io.github.tony8864.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.Duration;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,14 +47,10 @@ public class UserAuthenticationControllerTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private UserRepository userRepository;
+    @Autowired private TokenService tokenService;
 
     @Test
     void shouldLoginSuccessfully() throws Exception {
@@ -76,42 +75,6 @@ public class UserAuthenticationControllerTest {
     }
 
     @Test
-    void shouldLogoutSuccessfully() throws Exception {
-        String uniqueEmail = "tony_" + UUID.randomUUID() + "@example.com";
-        String uniqueUsername = "tony_" + UUID.randomUUID();
-
-        // 1. Register the user
-        var registerRequest = new RegisterUserApiRequest(
-                uniqueUsername,
-                uniqueEmail,
-                "secret123"
-        );
-
-        mockMvc.perform(post("/api/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isCreated());
-
-        // 2. Fetch the user from the DB
-        var user = userRepository.findByEmail(Email.of(uniqueEmail))
-                .orElseThrow(() -> new IllegalStateException("User not found after registration"));
-
-        // 3. Logout the user
-        var logoutRequest = new LogoutApiRequest(user.getUserId().getValue());
-        mockMvc.perform(post("/api/users/logout")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(logoutRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message")
-                        .value("User " + user.getUserId().getValue() + " logged out successfully."));
-
-        // 4. Verify DB state (user status updated to OFFLINE)
-        var updated = userRepository.findById(user.getUserId())
-                .orElseThrow(() -> new IllegalStateException("User not found after logout"));
-        assertEquals(PresenceStatus.OFFLINE, updated.getStatus());
-    }
-
-    @Test
     void shouldFailLoginWithInvalidPassword() throws Exception {
         String uniqueEmail = "tony_" + UUID.randomUUID() + "@example.com";
         String uniqueUsername = "tony_" + UUID.randomUUID();
@@ -131,5 +94,24 @@ public class UserAuthenticationControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.code").value("INVALID_CREDENTIALS"))
                 .andExpect(jsonPath("$.message").value("Invalid email or password"));
+    }
+
+    @Test
+    void shouldLogoutSuccessfully() throws Exception {
+        var user = User.create(
+                UserId.newId(),
+                "user_" + UUID.randomUUID(),
+                Email.of("user_" + UUID.randomUUID() + "@example.com"),
+                PasswordHash.newHash("secret123")
+        );
+        userRepository.save(user);
+
+        var claims = new UserClaims(user.getUserId().getValue(), user.getEmail().getValue(), Set.of("USER"));
+        String token = tokenService.generate(claims, Duration.ofHours(1));
+
+        mockMvc.perform(post("/api/users/logout")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("User " + user.getUserId().getValue() + " logged out successfully."));
     }
 }

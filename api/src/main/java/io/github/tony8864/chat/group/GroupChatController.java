@@ -33,17 +33,19 @@ public class GroupChatController {
     }
 
     @PostMapping("/remove-participant")
-    public ResponseEntity<RemoveParticipantApiResponse> removeParticipant(@RequestBody RemoveParticipantApiRequest apiRequest) {
-        var appRequest = mapper.toApplication(apiRequest);
+    public ResponseEntity<RemoveParticipantApiResponse> removeParticipant(HttpServletRequest httpServletRequest, @RequestBody RemoveParticipantApiRequest apiRequest) {
+        var requester = (AuthenticatedUser) httpServletRequest.getAttribute("authenticatedUser");
+        var appRequest = mapper.toApplication(apiRequest, requester.userId());
         var appResponse = removeParticipantUseCase.remove(appRequest);
         var apiResponse = mapper.toApi(appResponse);
         return ResponseEntity.ok(apiResponse);
     }
 
     @DeleteMapping("/{chatId}")
-    public ResponseEntity<Void> deleteGroupChat(@PathVariable String chatId, @RequestParam String requesterId) {
-        var request = new DeleteGroupChatRequest(chatId, requesterId);
-        deleteGroupChatUseCase.delete(request);
+    public ResponseEntity<Void> deleteGroupChat(HttpServletRequest request, @PathVariable String chatId) {
+        var requester = (AuthenticatedUser) request.getAttribute("authenticatedUser");
+        var appRequest = new DeleteGroupChatRequest(chatId, requester.userId());
+        deleteGroupChatUseCase.delete(appRequest);
         return ResponseEntity.noContent().build();
     }
 }

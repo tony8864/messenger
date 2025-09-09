@@ -3,8 +3,10 @@ package io.github.tony8864.user;
 import io.github.tony8864.user.dto.*;
 import io.github.tony8864.user.mapper.UserApiMapper;
 import io.github.tony8864.user.usecase.login.LoginUserUseCase;
+import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
 import io.github.tony8864.user.usecase.logout.LogoutUseCase;
 import io.github.tony8864.user.usecase.register.RegisterUserUseCase;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +42,9 @@ public class UserController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutApiResponse> logout(@RequestBody LogoutApiRequest request) {
-        logoutUseCase.logout(request.userId());
-        return ResponseEntity.ok(LogoutApiResponse.success(request.userId()));
+    public ResponseEntity<LogoutApiResponse> logout(HttpServletRequest request) {
+        var requester = (AuthenticatedUser) request.getAttribute("authenticatedUser");
+        logoutUseCase.logout(requester.userId());
+        return ResponseEntity.ok(LogoutApiResponse.success(requester.userId()));
     }
 }

@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 public class GroupChatApiMapper {
 
     // --- Remove Participant ---
-    public RemoveParticipantRequest toApplication(RemoveParticipantApiRequest apiRequest) {
+    public RemoveParticipantRequest toApplication(RemoveParticipantApiRequest apiRequest, String requesterId) {
         return new RemoveParticipantRequest(
                 apiRequest.chatId(),
-                apiRequest.requesterId(),
+                requesterId,
                 apiRequest.removeUserId()
         );
     }

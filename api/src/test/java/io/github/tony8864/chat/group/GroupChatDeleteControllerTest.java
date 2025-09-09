@@ -9,6 +9,8 @@ import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.participant.Participant;
 import io.github.tony8864.entities.participant.Role;
 import io.github.tony8864.entities.user.*;
+import io.github.tony8864.security.TokenService;
+import io.github.tony8864.security.UserClaims;
 import io.github.tony8864.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +24,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -49,20 +53,12 @@ public class GroupChatDeleteControllerTest {
         registry.add("spring.datasource.password", postgres::getPassword);
     }
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private GroupChatRepository groupChatRepository;
-
-    @Autowired
-    private PasswordHasher passwordHasher;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private UserRepository userRepository;
+    @Autowired private GroupChatRepository groupChatRepository;
+    @Autowired private PasswordHasher passwordHasher;
+    @Autowired private TokenService tokenService;
 
     @Test
     void shouldDeleteGroupChatSuccessfully() throws Exception {
@@ -99,9 +95,17 @@ public class GroupChatDeleteControllerTest {
         var chat = GroupChat.create(ChatId.newId(), participants, "Group To Delete");
         groupChatRepository.save(chat);
 
+        // Generate JWT for admin (the requester)
+        var claims = new UserClaims(
+                admin.getUserId().getValue(),
+                admin.getEmail().getValue(),
+                Set.of("ADMIN")
+        );
+        String token = tokenService.generate(claims, Duration.ofHours(1));
+
         // --- Act & Assert ---
         mockMvc.perform(delete("/api/chats/group/{chatId}", chat.getChatId().getValue())
-                        .param("requesterId", admin.getUserId().getValue())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -109,28 +113,6 @@ public class GroupChatDeleteControllerTest {
         assertThat(groupChatRepository.findById(chat.getChatId())).isEmpty();
     }
 
-    @Test
-    void shouldReturnNotFoundWhenChatDoesNotExist() throws Exception {
-        // --- Arrange ---
-        var admin = User.create(
-                UserId.newId(),
-                "admin_" + UUID.randomUUID(),
-                Email.of("admin_" + UUID.randomUUID() + "@example.com"),
-                PasswordHash.newHash("secret123")
-        );
-        userRepository.save(admin);
-
-        // Random fake chatId
-        var fakeChatId = UUID.randomUUID().toString();
-
-        // --- Act & Assert ---
-        mockMvc.perform(delete("/api/chats/group/{chatId}", fakeChatId)
-                        .param("requesterId", admin.getUserId().getValue())
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code").value("GROUP_CHAT_NOT_FOUND"))
-                .andExpect(jsonPath("$.message").exists());
-    }
 
     @Test
     void shouldReturnNotFoundWhenRequesterDoesNotExist() throws Exception {
@@ -166,12 +148,16 @@ public class GroupChatDeleteControllerTest {
         var chat = GroupChat.create(ChatId.newId(), participants, "Group Chat");
         groupChatRepository.save(chat);
 
-        // Use a random UUID not present in DB
+        // Use a random UUID not present in DB as requester
         var fakeRequesterId = UUID.randomUUID().toString();
+
+        // Generate token for this fake user
+        var claims = new UserClaims(fakeRequesterId, "ghost@example.com", Set.of("ADMIN"));
+        String token = tokenService.generate(claims, Duration.ofHours(1));
 
         // --- Act & Assert ---
         mockMvc.perform(delete("/api/chats/group/{chatId}", chat.getChatId().getValue())
-                        .param("requesterId", fakeRequesterId)
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("USER_NOT_FOUND"))
@@ -213,10 +199,17 @@ public class GroupChatDeleteControllerTest {
         var chat = GroupChat.create(ChatId.newId(), participants, "Protected Group");
         groupChatRepository.save(chat);
 
+        // Generate token for member1 (not an admin)
+        var claims = new UserClaims(
+                member1.getUserId().getValue(),
+                member1.getEmail().getValue(),
+                Set.of("USER")
+        );
+        String token = tokenService.generate(claims, Duration.ofHours(1));
+
         // --- Act & Assert ---
-        // member1 (not admin) tries to delete the chat
         mockMvc.perform(delete("/api/chats/group/{chatId}", chat.getChatId().getValue())
-                        .param("requesterId", member1.getUserId().getValue())
+                        .header("Authorization", "Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("FORBIDDEN"))

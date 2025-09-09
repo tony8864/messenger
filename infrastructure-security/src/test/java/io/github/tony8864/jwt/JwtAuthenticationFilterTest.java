@@ -30,7 +30,7 @@ class JwtAuthenticationFilterTest {
 
     @Test
     void shouldAllowPublicEndpoints() throws Exception {
-        when(request.getRequestURI()).thenReturn("/api/register");
+        when(request.getRequestURI()).thenReturn("/api/users/register");
 
         filter.doFilter(request, response, chain);
 
