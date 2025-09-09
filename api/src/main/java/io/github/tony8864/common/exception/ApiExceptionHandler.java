@@ -1,6 +1,7 @@
 package io.github.tony8864.common.exception;
 
 import io.github.tony8864.chat.common.exception.GroupChatNotFoundException;
+import io.github.tony8864.chat.usecase.createdirectchat.exception.InvalidChatException;
 import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.exceptions.chat.InvalidGroupException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
@@ -50,6 +51,12 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleGroupChatNotFound(GroupChatNotFoundException ex) {
         return new ErrorResponse("GROUP_CHAT_NOT_FOUND", ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidChatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleInvalidChat(InvalidChatException ex) {
+        return new ErrorResponse("INVALID_CHAT", ex.getMessage());
     }
 
     // --- Generic fallback ---
