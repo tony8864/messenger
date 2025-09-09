@@ -3,7 +3,6 @@ package io.github.tony8864.chat.group;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.tony8864.ChatApplication;
 import io.github.tony8864.chat.group.dto.RemoveParticipantApiRequest;
-import io.github.tony8864.chat.group.dto.RenameGroupChatApiRequest;
 import io.github.tony8864.chat.repository.GroupChatRepository;
 import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.GroupChat;

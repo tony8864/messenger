@@ -1,6 +1,8 @@
 package io.github.tony8864.chat.group.mapper;
 
 import io.github.tony8864.chat.group.dto.*;
+import io.github.tony8864.chat.usecase.creategroupchat.dto.CreateGroupChatRequest;
+import io.github.tony8864.chat.usecase.creategroupchat.dto.CreateGroupChatResponse;
 import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantRequest;
 import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantResponse;
 import io.github.tony8864.chat.usecase.renamegroupchat.dto.RenameGroupChatRequest;
@@ -9,6 +11,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class GroupChatApiMapper {
+
+    // --- Create Group Chat ---
+    public CreateGroupChatRequest toApplication(CreateGroupChatApiRequest apiRequest, String requesterId) {
+        return new CreateGroupChatRequest(
+                requesterId,
+                apiRequest.groupName(),
+                apiRequest.userIds()
+        );
+    }
+
+    public CreateGroupChatApiResponse toApi(CreateGroupChatResponse appResponse) {
+        return new CreateGroupChatApiResponse(
+                appResponse.chatId(),
+                appResponse.groupName(),
+                appResponse.participantDtos().stream()
+                        .map(p -> new ParticipantApiDto(
+                                p.userId(),
+                                p.role().name()
+                        ))
+                        .toList(),
+                appResponse.createdAt()
+        );
+    }
 
     // --- Remove Participant ---
     public RemoveParticipantRequest toApplication(RemoveParticipantApiRequest apiRequest, String requesterId) {
