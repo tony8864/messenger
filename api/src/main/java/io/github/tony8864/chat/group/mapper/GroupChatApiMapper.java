@@ -1,6 +1,8 @@
 package io.github.tony8864.chat.group.mapper;
 
 import io.github.tony8864.chat.group.dto.*;
+import io.github.tony8864.chat.usecase.addparticipant.dto.AddParticipantRequest;
+import io.github.tony8864.chat.usecase.addparticipant.dto.AddParticipantResponse;
 import io.github.tony8864.chat.usecase.creategroupchat.dto.CreateGroupChatRequest;
 import io.github.tony8864.chat.usecase.creategroupchat.dto.CreateGroupChatResponse;
 import io.github.tony8864.chat.usecase.removeparticipant.dto.RemoveParticipantRequest;
@@ -32,6 +34,28 @@ public class GroupChatApiMapper {
                         ))
                         .toList(),
                 appResponse.createdAt()
+        );
+    }
+
+    // --- Add Participant ---
+    public AddParticipantRequest toApplication(AddParticipantApiRequest apiRequest, String requesterId) {
+        return new AddParticipantRequest(
+                apiRequest.chatId(),
+                requesterId,
+                apiRequest.userId()
+        );
+    }
+
+    public AddParticipantApiResponse toApi(AddParticipantResponse appResponse) {
+        return new AddParticipantApiResponse(
+                appResponse.chatId(),
+                appResponse.groupName(),
+                appResponse.participants().stream()
+                        .map(p -> new ParticipantApiDto(
+                                p.userId(),
+                                p.role().name()
+                        ))
+                        .toList()
         );
     }
 
