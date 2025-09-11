@@ -22,6 +22,7 @@ public class Message {
         this.userId = userId;
         this.content = content;
         this.createdAt = Instant.now();
+        this.updatedAt = this.createdAt;
         this.status = MessageStatus.SENT;
     }
 

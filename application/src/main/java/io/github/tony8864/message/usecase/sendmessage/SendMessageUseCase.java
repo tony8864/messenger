@@ -10,6 +10,7 @@ import io.github.tony8864.entities.message.Message;
 import io.github.tony8864.entities.message.MessageId;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
+import io.github.tony8864.message.repository.MessageEventPublisher;
 import io.github.tony8864.message.repository.MessageRepository;
 import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageRequest;
 import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageResponse;
@@ -18,11 +19,13 @@ public class SendMessageUseCase {
     private final MessageRepository messageRepository;
     private final GroupChatRepository groupChatRepository;
     private final DirectChatRepository directChatRepository;
+    private final MessageEventPublisher messageEventPublisher;
 
-    public SendMessageUseCase(MessageRepository messageRepository, GroupChatRepository groupChatRepository, DirectChatRepository directChatRepository) {
+    public SendMessageUseCase(MessageRepository messageRepository, GroupChatRepository groupChatRepository, DirectChatRepository directChatRepository, MessageEventPublisher messageEventPublisher) {
         this.messageRepository = messageRepository;
         this.groupChatRepository = groupChatRepository;
         this.directChatRepository = directChatRepository;
+        this.messageEventPublisher = messageEventPublisher;
     }
 
     public SendMessageResponse send(SendMessageRequest request) {
@@ -46,6 +49,8 @@ public class SendMessageUseCase {
         chat.updateLastMessage(message.getMessageId());
         directChatRepository.save(chat);
 
+        messageEventPublisher.publishMessageSent(message);
+
         return SendMessageResponse.fromDomain(message);
     }
 
@@ -58,6 +63,8 @@ public class SendMessageUseCase {
         messageRepository.save(message);
         chat.updateLastMessage(message.getMessageId());
         groupChatRepository.save(chat);
+
+        messageEventPublisher.publishMessageSent(message);
 
         return SendMessageResponse.fromDomain(message);
     }

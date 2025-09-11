@@ -1,5 +1,6 @@
 package io.github.tony8864.jwt;
 
+import io.github.tony8864.security.TokenService;
 import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,9 +10,9 @@ import java.io.IOException;
 
 public class JwtAuthenticationFilter implements Filter {
 
-    private final JwtTokenService tokenService;
+    private final TokenService tokenService;
 
-    public JwtAuthenticationFilter(JwtTokenService tokenService) {
+    public JwtAuthenticationFilter(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 

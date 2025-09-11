@@ -9,6 +9,7 @@ import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.message.Message;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
+import io.github.tony8864.message.repository.MessageEventPublisher;
 import io.github.tony8864.message.repository.MessageRepository;
 import io.github.tony8864.message.usecase.sendmessage.SendMessageUseCase;
 import io.github.tony8864.message.usecase.sendmessage.dto.SendMessageRequest;
@@ -26,6 +27,7 @@ class SendMessageUseCaseTest {
     private MessageRepository messageRepository;
     private GroupChatRepository groupChatRepository;
     private DirectChatRepository directChatRepository;
+    private MessageEventPublisher messageEventPublisher;
     private SendMessageUseCase useCase;
 
     private ChatId chatId;
@@ -38,7 +40,9 @@ class SendMessageUseCaseTest {
         messageRepository = mock(MessageRepository.class);
         groupChatRepository = mock(GroupChatRepository.class);
         directChatRepository = mock(DirectChatRepository.class);
-        useCase = new SendMessageUseCase(messageRepository, groupChatRepository, directChatRepository);
+        messageEventPublisher = mock(MessageEventPublisher.class);
+
+        useCase = new SendMessageUseCase(messageRepository, groupChatRepository, directChatRepository, messageEventPublisher);
 
         chatId = ChatId.of("chat-1");
         senderId = UserId.of("user-1");

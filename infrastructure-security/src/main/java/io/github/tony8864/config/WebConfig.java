@@ -1,16 +1,16 @@
 package io.github.tony8864.config;
 
 import io.github.tony8864.jwt.JwtAuthenticationFilter;
-import io.github.tony8864.jwt.JwtTokenService;
+import io.github.tony8864.security.TokenService;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class WebConfig {
-    private final JwtTokenService tokenService;
+    private final TokenService tokenService;
 
-    public WebConfig(JwtTokenService tokenService) {
+    public WebConfig(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 

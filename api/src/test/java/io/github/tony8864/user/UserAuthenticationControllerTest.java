@@ -2,8 +2,10 @@ package io.github.tony8864.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.tony8864.ChatApplication;
-import io.github.tony8864.entities.user.*;
-import io.github.tony8864.jwt.JwtTokenService;
+import io.github.tony8864.entities.user.Email;
+import io.github.tony8864.entities.user.PasswordHash;
+import io.github.tony8864.entities.user.User;
+import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.security.TokenService;
 import io.github.tony8864.security.UserClaims;
 import io.github.tony8864.user.dto.LoginApiRequest;
@@ -25,7 +27,6 @@ import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

@@ -14,6 +14,7 @@
         <module>infrastructure-jpa</module>
         <module>api</module>
         <module>infrastructure-security</module>
+        <module>infrastructure-websocket</module>
     </modules>
 
     <properties>
