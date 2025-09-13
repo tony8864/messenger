@@ -4,6 +4,7 @@ import io.github.tony8864.chat.repository.DirectChatRepository;
 import io.github.tony8864.chat.repository.GroupChatRepository;
 import io.github.tony8864.message.repository.MessageEventPublisher;
 import io.github.tony8864.message.repository.MessageRepository;
+import io.github.tony8864.message.usecase.listmessages.ListMessagesUseCase;
 import io.github.tony8864.message.usecase.sendmessage.SendMessageUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +24,10 @@ public class MessageConfig {
                 directChatRepository,
                 messageEventPublisher
         );
+    }
+
+    @Bean
+    public ListMessagesUseCase listMessagesUseCase(MessageRepository messageRepository, GroupChatRepository groupChatRepository, DirectChatRepository directChatRepository) {
+        return new ListMessagesUseCase(messageRepository, groupChatRepository, directChatRepository);
     }
 }

@@ -29,7 +29,7 @@ public class JpaMessageRepository implements MessageRepository {
 
     @Override
     public List<Message> findLastNMessages(ChatId chatId, int limit) {
-        return messageRepository.findByChat_IdOrderByCreatedAtDesc(
+        return messageRepository.findByChat_IdOrderByCreatedAtDescIdDesc(
                 UUID.fromString(chatId.getValue()),
                 PageRequest.of(0, limit)
         )

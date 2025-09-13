@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface SpringDataMessageRepository extends JpaRepository<MessageEntity, UUID> {
-    List<MessageEntity> findByChat_IdOrderByCreatedAtDesc(UUID chatId, Pageable pageable);
+    List<MessageEntity> findByChat_IdOrderByCreatedAtDescIdDesc(UUID chatId, Pageable pageable);
 }
