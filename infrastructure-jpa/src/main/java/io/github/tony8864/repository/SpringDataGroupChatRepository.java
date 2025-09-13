@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,4 +14,12 @@ import java.util.UUID;
 public interface SpringDataGroupChatRepository extends JpaRepository<GroupChatEntity, UUID> {
     @Query("SELECT g FROM GroupChatEntity g LEFT JOIN FETCH g.participants WHERE g.id = :id")
     Optional<GroupChatEntity> findByIdWithParticipants(@Param("id") UUID id);
+
+    @Query("SELECT DISTINCT g FROM GroupChatEntity g " +
+            "LEFT JOIN FETCH g.participants p " +
+            "WHERE EXISTS (" +
+            "  SELECT 1 FROM GroupChatParticipantEntity gp " +
+            "  WHERE gp.groupChat = g AND gp.user.id = :userId" +
+            ")")
+    List<GroupChatEntity> findByParticipant(@Param("userId") UUID userId);
 }

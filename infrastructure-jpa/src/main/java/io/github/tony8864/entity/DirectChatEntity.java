@@ -1,14 +1,12 @@
 package io.github.tony8864.entity;
 
-import io.github.tony8864.entities.chat.ChatId;
-import io.github.tony8864.entities.chat.DirectChat;
-import io.github.tony8864.entities.message.MessageId;
-import io.github.tony8864.entities.user.UserId;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.UUID;
 
 @Entity

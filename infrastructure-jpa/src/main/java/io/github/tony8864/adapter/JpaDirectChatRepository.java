@@ -42,7 +42,10 @@ public class JpaDirectChatRepository implements DirectChatRepository {
 
     @Override
     public List<DirectChat> findByParticipant(UserId userId) {
-        return List.of();
+        return chatRepository.findByParticipant(UUID.fromString(userId.getValue()))
+                .stream()
+                .map(directChatMapper::toDomain)
+                .toList();
     }
 
     @Override

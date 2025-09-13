@@ -111,4 +111,31 @@ class JpaDirectChatRepositoryTest {
         Optional<DirectChat> found = directChatRepository.findById(chatId);
         assertTrue(found.isEmpty());
     }
+
+    @Test
+    void findByParticipantShouldReturnChats() {
+        ChatId chatId1 = ChatId.of(UUID.randomUUID().toString());
+        ChatId chatId2 = ChatId.of(UUID.randomUUID().toString());
+
+        // user1 and user2 already saved in @BeforeEach
+        // create an extra saved user
+        UserId user3Id = UserId.of(UUID.randomUUID().toString());
+        User user3 = User.create(user3Id,
+                "charlie_" + UUID.randomUUID(),
+                Email.of("charlie_" + UUID.randomUUID() + "@example.com"),
+                PasswordHash.newHash("hash3"));
+        userRepository.save(user3);
+
+        DirectChat chat1 = DirectChat.create(chatId1, List.of(user1Id, user2Id));
+        DirectChat chat2 = DirectChat.create(chatId2, List.of(user1Id, user3Id));
+
+        directChatRepository.save(chat1);
+        directChatRepository.save(chat2);
+
+        List<DirectChat> foundChats = directChatRepository.findByParticipant(user1Id);
+
+        assertEquals(2, foundChats.size());
+        List<ChatId> chatIds = foundChats.stream().map(DirectChat::getChatId).toList();
+        assertTrue(chatIds.containsAll(List.of(chatId1, chatId2)));
+    }
 }

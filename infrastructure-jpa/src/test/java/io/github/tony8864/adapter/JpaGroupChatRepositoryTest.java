@@ -52,6 +52,7 @@ class JpaGroupChatRepositoryTest {
     private UserId user1Id;
     private UserId user2Id;
     private UserId user3Id;
+    private UserId extraUserId;
 
     @BeforeEach
     void setupUsers() {
@@ -60,6 +61,7 @@ class JpaGroupChatRepositoryTest {
         user1Id = UserId.of(UUID.randomUUID().toString());
         user2Id = UserId.of(UUID.randomUUID().toString());
         user3Id = UserId.of(UUID.randomUUID().toString());
+        extraUserId = UserId.of(UUID.randomUUID().toString());
 
         User user1 = User.create(
                 user1Id,
@@ -79,10 +81,17 @@ class JpaGroupChatRepositoryTest {
                 Email.of("carol_" + suffix + "@example.com"),
                 PasswordHash.newHash("hash3")
         );
+        User extra = User.create( // add this
+                extraUserId,
+                "dave_" + suffix,
+                Email.of("dave_" + suffix + "@example.com"),
+                PasswordHash.newHash("hash4")
+        );
 
         userRepository.save(user1);
         userRepository.save(user2);
         userRepository.save(user3);
+        userRepository.save(extra);
     }
 
     @Test
@@ -133,5 +142,64 @@ class JpaGroupChatRepositoryTest {
 
         // then
         assertTrue(found.isEmpty());
+    }
+
+    @Test
+    void findByParticipant_shouldReturnChatsForUser() {
+        // given
+        ChatId chatId1 = ChatId.of(UUID.randomUUID().toString());
+        GroupChat chat1 = GroupChat.create(
+                chatId1,
+                List.of(
+                        Participant.create(user1Id, Role.ADMIN),
+                        Participant.create(user2Id, Role.MEMBER),
+                        Participant.create(user3Id, Role.MEMBER) // all three already persisted in setup
+                ),
+                "project-alpha"
+        );
+
+        ChatId chatId2 = ChatId.of(UUID.randomUUID().toString());
+        GroupChat chat2 = GroupChat.create(
+                chatId2,
+                List.of(
+                        Participant.create(user1Id, Role.ADMIN),
+                        Participant.create(user2Id, Role.MEMBER),
+                        Participant.create(extraUserId, Role.MEMBER) // extra user persisted in setup
+                ),
+                "project-beta"
+        );
+
+        groupChatRepository.save(chat1);
+        groupChatRepository.save(chat2);
+
+        // when
+        List<GroupChat> user1Chats = groupChatRepository.findByParticipant(user1Id);
+
+        // then
+        assertEquals(2, user1Chats.size(), "User1 should be in both chats");
+        assertTrue(user1Chats.stream().anyMatch(c -> c.getGroupName().equals("project-alpha")));
+        assertTrue(user1Chats.stream().anyMatch(c -> c.getGroupName().equals("project-beta")));
+    }
+
+    @Test
+    void findByParticipant_shouldReturnEmptyWhenUserNotInAnyChat() {
+        // given
+        ChatId chatId = ChatId.of(UUID.randomUUID().toString());
+        GroupChat chat = GroupChat.create(
+                chatId,
+                List.of(
+                        Participant.create(user1Id, Role.ADMIN),
+                        Participant.create(user2Id, Role.MEMBER),
+                        Participant.create(extraUserId, Role.MEMBER) // third persisted user
+                ),
+                "lonely-chat"
+        );
+        groupChatRepository.save(chat);
+
+        // when
+        List<GroupChat> user3Chats = groupChatRepository.findByParticipant(user3Id);
+
+        // then
+        assertTrue(user3Chats.isEmpty(), "User3 should not be in any chat");
     }
 }
