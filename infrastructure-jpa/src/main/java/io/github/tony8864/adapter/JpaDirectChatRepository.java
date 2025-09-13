@@ -14,6 +14,7 @@ import io.github.tony8864.repository.SpringDataUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +38,11 @@ public class JpaDirectChatRepository implements DirectChatRepository {
     public Optional<DirectChat> findByUsers(UserId user1, UserId user2) {
         return chatRepository.findByUsers(UUID.fromString(user1.getValue()), UUID.fromString(user2.getValue()))
                 .map(directChatMapper::toDomain);
+    }
+
+    @Override
+    public List<DirectChat> findByParticipant(UserId userId) {
+        return List.of();
     }
 
     @Override

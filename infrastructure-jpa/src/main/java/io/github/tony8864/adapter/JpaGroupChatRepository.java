@@ -2,7 +2,9 @@ package io.github.tony8864.adapter;
 
 import io.github.tony8864.chat.repository.GroupChatRepository;
 import io.github.tony8864.entities.chat.ChatId;
+import io.github.tony8864.entities.chat.DirectChat;
 import io.github.tony8864.entities.chat.GroupChat;
+import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.entity.GroupChatEntity;
 import io.github.tony8864.entity.MessageEntity;
 import io.github.tony8864.entity.UserEntity;
@@ -30,6 +32,11 @@ public class JpaGroupChatRepository implements GroupChatRepository {
     public Optional<GroupChat> findById(ChatId chatId) {
         return groupChatRepository.findByIdWithParticipants(UUID.fromString(chatId.getValue()))
                 .map(groupChatMapper::toDomain);
+    }
+
+    @Override
+    public List<GroupChat> findByParticipant(UserId userId) {
+        return List.of();
     }
 
     @Override

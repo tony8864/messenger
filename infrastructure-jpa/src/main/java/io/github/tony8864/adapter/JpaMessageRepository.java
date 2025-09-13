@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -36,6 +37,11 @@ public class JpaMessageRepository implements MessageRepository {
                 .stream()
                 .map(messageMapper::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<Message> findLastMessage(ChatId chatId) {
+        return Optional.empty();
     }
 
     @Override
