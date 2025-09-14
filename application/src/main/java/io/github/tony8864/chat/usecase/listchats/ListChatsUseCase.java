@@ -5,11 +5,13 @@ import io.github.tony8864.chat.repository.GroupChatRepository;
 import io.github.tony8864.chat.usecase.listchats.dto.ChatSummaryDto;
 import io.github.tony8864.chat.usecase.listchats.dto.ListChatsRequest;
 import io.github.tony8864.chat.usecase.listchats.dto.ListChatsResponse;
+import io.github.tony8864.common.UserNotFoundException;
 import io.github.tony8864.entities.chat.DirectChat;
 import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.message.Message;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.message.repository.MessageRepository;
+import io.github.tony8864.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,15 +21,18 @@ public class ListChatsUseCase {
     private final DirectChatRepository directChatRepository;
     private final GroupChatRepository groupChatRepository;
     private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
 
     public ListChatsUseCase(
             DirectChatRepository directChatRepository,
             GroupChatRepository groupChatRepository,
-            MessageRepository messageRepository
+            MessageRepository messageRepository,
+            UserRepository userRepository
     ) {
         this.directChatRepository = directChatRepository;
         this.groupChatRepository = groupChatRepository;
         this.messageRepository = messageRepository;
+        this.userRepository = userRepository;
     }
 
     public ListChatsResponse list(ListChatsRequest request) {
@@ -65,13 +70,16 @@ public class ListChatsUseCase {
                 .findFirst()
                 .orElseThrow();
 
+        var otherUser = userRepository.findById(other)
+                .orElseThrow(() -> UserNotFoundException.byId(other.getValue()));
+
         // fetch latest message (optional)
         Message lastMessage = messageRepository.findLastMessage(chat.getChatId()).orElse(null);
 
         return new ChatSummaryDto(
                 chat.getChatId().getValue(),
                 "DIRECT",
-                other.getValue(), // later you can resolve username here
+                otherUser.getUsername(),
                 lastMessage != null ? lastMessage.getContent() : null,
                 lastMessage != null ? lastMessage.getCreatedAt() : null
         );

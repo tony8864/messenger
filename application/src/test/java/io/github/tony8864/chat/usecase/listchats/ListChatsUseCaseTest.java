@@ -9,8 +9,10 @@ import io.github.tony8864.entities.chat.ChatId;
 import io.github.tony8864.entities.chat.DirectChat;
 import io.github.tony8864.entities.chat.GroupChat;
 import io.github.tony8864.entities.message.Message;
+import io.github.tony8864.entities.user.User;
 import io.github.tony8864.entities.user.UserId;
 import io.github.tony8864.message.repository.MessageRepository;
+import io.github.tony8864.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +27,7 @@ class ListChatsUseCaseTest {
     private DirectChatRepository directChatRepository;
     private GroupChatRepository groupChatRepository;
     private MessageRepository messageRepository;
+    private UserRepository userRepository;
     private ListChatsUseCase useCase;
 
     private UserId requesterId;
@@ -34,7 +37,8 @@ class ListChatsUseCaseTest {
         directChatRepository = mock(DirectChatRepository.class);
         groupChatRepository = mock(GroupChatRepository.class);
         messageRepository = mock(MessageRepository.class);
-        useCase = new ListChatsUseCase(directChatRepository, groupChatRepository, messageRepository);
+        userRepository = mock(UserRepository.class);
+        useCase = new ListChatsUseCase(directChatRepository, groupChatRepository, messageRepository, userRepository);
 
         requesterId = UserId.of("req-1");
     }
@@ -42,6 +46,7 @@ class ListChatsUseCaseTest {
     @Test
     void shouldListDirectChatsForUser() {
         // --- Arrange ---
+        UserId otherUserId = UserId.of("user-2");
         DirectChat directChat = mock(DirectChat.class);
         when(directChat.getChatId()).thenReturn(ChatId.of("chat-1"));
         when(directChat.getParticipants()).thenReturn(List.of(requesterId, UserId.of("user-2")));
@@ -55,6 +60,11 @@ class ListChatsUseCaseTest {
         when(messageRepository.findLastMessage(ChatId.of("chat-1")))
                 .thenReturn(Optional.of(lastMessage));
 
+        User otherUser = mock(User.class);
+        when(otherUser.getUserId()).thenReturn(otherUserId);
+        when(otherUser.getUsername()).thenReturn("bob");
+        when(userRepository.findById(otherUserId)).thenReturn(Optional.of(otherUser));
+
         // --- Act ---
         ListChatsRequest request = new ListChatsRequest("req-1", 10);
         ListChatsResponse response = useCase.list(request);
@@ -65,7 +75,7 @@ class ListChatsUseCaseTest {
 
         assertEquals("chat-1", summary.chatId());
         assertEquals("DIRECT", summary.type());
-        assertEquals("user-2", summary.name()); // other participant
+        assertEquals("bob", summary.name());
         assertEquals("Hello there", summary.lastMessage());
         assertEquals(Instant.parse("2025-09-13T10:15:30Z"), summary.lastMessageAt());
 
@@ -110,9 +120,11 @@ class ListChatsUseCaseTest {
     @Test
     void shouldMergeAndSortByLastMessageAt() {
         // --- Arrange ---
+        UserId otherUserId = UserId.of("user-2");
+
         DirectChat directChat = mock(DirectChat.class);
         when(directChat.getChatId()).thenReturn(ChatId.of("chat-1"));
-        when(directChat.getParticipants()).thenReturn(List.of(requesterId, UserId.of("user-2")));
+        when(directChat.getParticipants()).thenReturn(List.of(requesterId, otherUserId));
 
         GroupChat groupChat = mock(GroupChat.class);
         when(groupChat.getChatId()).thenReturn(ChatId.of("chat-2"));
@@ -136,6 +148,11 @@ class ListChatsUseCaseTest {
         when(messageRepository.findLastMessage(ChatId.of("chat-2")))
                 .thenReturn(Optional.of(groupLastMessage));
 
+        User otherUser = mock(User.class);
+        when(otherUser.getUserId()).thenReturn(otherUserId);
+        when(otherUser.getUsername()).thenReturn("bob");
+        when(userRepository.findById(otherUserId)).thenReturn(Optional.of(otherUser));
+
         // --- Act ---
         ListChatsRequest request = new ListChatsRequest("req-1", 10);
         ListChatsResponse response = useCase.list(request);
@@ -152,18 +169,22 @@ class ListChatsUseCaseTest {
 
         verify(directChatRepository).findByParticipant(requesterId);
         verify(groupChatRepository).findByParticipant(requesterId);
+        verify(userRepository).findById(otherUserId);
     }
 
     @Test
     void shouldRespectLimitParameter() {
         // --- Arrange ---
+        UserId userX = UserId.of("user-x");
+        UserId userY = UserId.of("user-y");
+
         DirectChat chat1 = mock(DirectChat.class);
         when(chat1.getChatId()).thenReturn(ChatId.of("chat-1"));
-        when(chat1.getParticipants()).thenReturn(List.of(requesterId, UserId.of("user-x")));
+        when(chat1.getParticipants()).thenReturn(List.of(requesterId, userX));
 
         DirectChat chat2 = mock(DirectChat.class);
         when(chat2.getChatId()).thenReturn(ChatId.of("chat-2"));
-        when(chat2.getParticipants()).thenReturn(List.of(requesterId, UserId.of("user-y")));
+        when(chat2.getParticipants()).thenReturn(List.of(requesterId, userY));
 
         Message lastMsg1 = mock(Message.class);
         when(lastMsg1.getContent()).thenReturn("Old message");
@@ -183,6 +204,16 @@ class ListChatsUseCaseTest {
         when(messageRepository.findLastMessage(ChatId.of("chat-2")))
                 .thenReturn(Optional.of(lastMsg2));
 
+        User mockUserX = mock(User.class);
+        when(mockUserX.getUserId()).thenReturn(userX);
+        when(mockUserX.getUsername()).thenReturn("alice");
+        when(userRepository.findById(userX)).thenReturn(Optional.of(mockUserX));
+
+        User mockUserY = mock(User.class);
+        when(mockUserY.getUserId()).thenReturn(userY);
+        when(mockUserY.getUsername()).thenReturn("bob");
+        when(userRepository.findById(userY)).thenReturn(Optional.of(mockUserY));
+
         // --- Act ---
         ListChatsRequest request = new ListChatsRequest("req-1", 1); // limit = 1
         ListChatsResponse response = useCase.list(request);
@@ -197,6 +228,8 @@ class ListChatsUseCaseTest {
         verify(directChatRepository).findByParticipant(requesterId);
         verify(messageRepository).findLastMessage(ChatId.of("chat-1"));
         verify(messageRepository).findLastMessage(ChatId.of("chat-2"));
+        verify(userRepository).findById(userX);
+        verify(userRepository).findById(userY);
     }
 
     @Test

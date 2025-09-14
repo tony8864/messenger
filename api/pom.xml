@@ -62,18 +62,15 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.github.tony8864</groupId>
             <artifactId>infrastructure-websocket</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
