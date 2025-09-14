@@ -39,3 +39,6 @@ build/
 
 # Ignore local sensitive config
 **/application-local.properties
+
+# Docker Compose env file
+.env
