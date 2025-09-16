@@ -7,6 +7,7 @@ import io.github.tony8864.exceptions.chat.InvalidGroupException;
 import io.github.tony8864.exceptions.common.UnauthorizedOperationException;
 import io.github.tony8864.user.usecase.login.exception.InvalidCredentialsException;
 import io.github.tony8864.user.usecase.register.exception.UserAlreadyExistsException;
+import io.github.tony8864.user.usecase.register.exception.UsernameAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -64,5 +65,11 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGenericException(Exception ex) {
         return new ErrorResponse("INTERNAL_SERVER_ERROR", "An unexpected error occurred");
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleUsernameAlreadyExists(UsernameAlreadyExistsException ex) {
+        return new ErrorResponse("USERNAME_ALREADY_EXISTS", ex.getMessage());
     }
 }

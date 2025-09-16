@@ -96,4 +96,27 @@ public class UserRegistrationControllerTest {
                 .andExpect(jsonPath("$.code").value("USER_ALREADY_EXISTS"))
                 .andExpect(jsonPath("$.message").value("User with email: " + uniqueEmail + " already exists"));
     }
+
+    @Test
+    void shouldFailWhenUsernameAlreadyExists() throws Exception {
+        String uniqueUsername = "user_" + UUID.randomUUID();
+        String email1 = "email1_" + UUID.randomUUID() + "@example.com";
+        String email2 = "email2_" + UUID.randomUUID() + "@example.com";
+
+        // First registration with username
+        var firstRequest = new RegisterUserApiRequest(uniqueUsername, email1, "secret123");
+        mockMvc.perform(post("/api/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(firstRequest)))
+                .andExpect(status().isCreated());
+
+        // Second registration with same username but different email
+        var secondRequest = new RegisterUserApiRequest(uniqueUsername, email2, "secret456");
+        mockMvc.perform(post("/api/users/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(secondRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("USERNAME_ALREADY_EXISTS"))
+                .andExpect(jsonPath("$.message").value("User with username: " + uniqueUsername + " already exists"));
+    }
 }

@@ -32,6 +32,12 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByUsername(String username) {
+        return springDataUserRepository.findByUsername(username)
+                .map(userMapper::toDomain);
+    }
+
+    @Override
     public void save(User user) {
         springDataUserRepository.save(userMapper.fromDomain(user));
     }

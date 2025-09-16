@@ -93,4 +93,24 @@ class JpaUserRepositoryTest {
 
         assertThrows(Exception.class, () -> userRepository.save(user2));
     }
+
+    @Test
+    void findByUsernameShouldReturnUser() {
+        UserId id = UserId.of(UUID.randomUUID().toString());
+        User user = User.create(id, "findme", Email.of("findme@example.com"), PasswordHash.newHash("hash123"));
+        userRepository.save(user);
+
+        Optional<User> found = userRepository.findByUsername("findme");
+
+        assertTrue(found.isPresent());
+        assertEquals("findme", found.get().getUsername());
+        assertEquals("findme@example.com", found.get().getEmail().getValue());
+    }
+
+    @Test
+    void findByUsernameShouldReturnEmptyWhenNotExists() {
+        Optional<User> found = userRepository.findByUsername("missinguser");
+
+        assertTrue(found.isEmpty());
+    }
 }

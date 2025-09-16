@@ -5,6 +5,7 @@ import io.github.tony8864.user.usecase.register.exception.UserAlreadyExistsExcep
 import io.github.tony8864.user.repository.UserRepository;
 import io.github.tony8864.user.usecase.register.dto.RegisterUserRequest;
 import io.github.tony8864.user.usecase.register.dto.RegisterUserResponse;
+import io.github.tony8864.user.usecase.register.exception.UsernameAlreadyExistsException;
 
 public class RegisterUserUseCase {
 
@@ -18,10 +19,16 @@ public class RegisterUserUseCase {
 
     public RegisterUserResponse register(RegisterUserRequest request) {
         Email email = Email.of(request.email());
+        String username = request.username();
 
         userRepository.findByEmail(email)
                 .ifPresent(u -> {
                     throw new UserAlreadyExistsException(email.getValue());
+                });
+
+        userRepository.findByUsername(username)
+                .ifPresent(u -> {
+                    throw new UsernameAlreadyExistsException(username);
                 });
 
         String hashed = passwordHasher.hash(request.password());

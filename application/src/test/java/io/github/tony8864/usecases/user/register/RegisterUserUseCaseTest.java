@@ -6,6 +6,8 @@ import io.github.tony8864.user.repository.UserRepository;
 import io.github.tony8864.user.usecase.register.dto.RegisterUserRequest;
 import io.github.tony8864.user.usecase.register.dto.RegisterUserResponse;
 import io.github.tony8864.user.usecase.register.RegisterUserUseCase;
+import io.github.tony8864.user.usecase.register.exception.UserAlreadyExistsException;
+import io.github.tony8864.user.usecase.register.exception.UsernameAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -54,5 +56,21 @@ class RegisterUserUseCaseTest {
         assertEquals("alice", saved.getUsername());
         assertEquals("alice@example.com", saved.getEmail().getValue());
         assertTrue(saved.verifyPassword("secret", passwordHasher));
+    }
+
+    @Test
+    void registerShouldThrowWhenUsernameAlreadyExists() {
+        // given
+        RegisterUserRequest request = new RegisterUserRequest("alice", "alice@example.com", "secret");
+
+        // simulate: username already taken
+        when(userRepository.findByEmail(any())).thenReturn(Optional.empty());
+        when(userRepository.findByUsername("alice")).thenReturn(Optional.of(mock(User.class)));
+
+        // when / then
+        assertThrows(UsernameAlreadyExistsException.class, () -> useCase.register(request));
+
+        // verify that save() was never called
+        verify(userRepository, never()).save(any());
     }
 }
