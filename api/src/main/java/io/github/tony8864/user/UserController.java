@@ -6,6 +6,7 @@ import io.github.tony8864.user.usecase.login.LoginUserUseCase;
 import io.github.tony8864.user.usecase.login.dto.AuthenticatedUser;
 import io.github.tony8864.user.usecase.logout.LogoutUseCase;
 import io.github.tony8864.user.usecase.register.RegisterUserUseCase;
+import io.github.tony8864.user.usecase.searchuser.SearchUserUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
     private final RegisterUserUseCase registerUserUseCase;
+    private final SearchUserUseCase searchUserUseCase;
     private final LoginUserUseCase loginUserUseCase;
     private final LogoutUseCase logoutUseCase;
 
@@ -46,5 +48,12 @@ public class UserController {
         var requester = (AuthenticatedUser) request.getAttribute("authenticatedUser");
         logoutUseCase.logout(requester.userId());
         return ResponseEntity.ok(LogoutApiResponse.success(requester.userId()));
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<SearchUserApiResponse> searchUser(@RequestBody SearchUserApiRequest apiRequest) {
+        var appRequest = mapper.toApplication(apiRequest);
+        var appResponse = searchUserUseCase.search(appRequest);
+        return ResponseEntity.ok(mapper.toApi(appResponse));
     }
 }

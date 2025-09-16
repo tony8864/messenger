@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -112,7 +113,10 @@ class GroupChatRenameControllerTest {
                 .andExpect(jsonPath("$.groupName").value("New Group Name"))
                 .andExpect(jsonPath("$.participants").isArray())
                 .andExpect(jsonPath("$.participants[0].userId").isNotEmpty())
-                .andExpect(jsonPath("$.participants[0].role").value("ADMIN"));
+                .andExpect(jsonPath("$.participants[*].role").value(
+                        containsInAnyOrder("ADMIN", "MEMBER", "MEMBER")
+                ));
+
     }
 
     @Test

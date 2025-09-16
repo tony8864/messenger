@@ -6,6 +6,7 @@ import io.github.tony8864.user.repository.UserRepository;
 import io.github.tony8864.user.usecase.login.LoginUserUseCase;
 import io.github.tony8864.user.usecase.logout.LogoutUseCase;
 import io.github.tony8864.user.usecase.register.RegisterUserUseCase;
+import io.github.tony8864.user.usecase.searchuser.SearchUserUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,5 +26,10 @@ public class UserConfig {
     @Bean
     public LogoutUseCase logoutUseCase(UserRepository userRepository) {
         return new LogoutUseCase(userRepository);
+    }
+
+    @Bean
+    public SearchUserUseCase searchUserUseCase(UserRepository userRepository) {
+        return new SearchUserUseCase(userRepository);
     }
 }

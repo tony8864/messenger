@@ -12,4 +12,8 @@ public class UserNotFoundException extends RuntimeException {
     public static UserNotFoundException byId(String id) {
         return new UserNotFoundException("User with id \"" + id + "\" not found");
     }
+
+    public static UserNotFoundException byUsername(String username) {
+        return new UserNotFoundException("User with id \"" + username + "\" not found");
+    }
 }
